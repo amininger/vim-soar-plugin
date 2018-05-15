@@ -2,10 +2,10 @@
 " Language:    Soar
 " Maintainer:  Aaron
 
-if exists("b:set_soar_indent")
+if exists("b:did_soar_indent")
 	finish
 endif
-let b:set_soar_indent = 1
+let b:did_soar_indent = 1
 
 setlocal indentexpr=GetSoarIndent(v:lnum)
 setlocal indentkeys&

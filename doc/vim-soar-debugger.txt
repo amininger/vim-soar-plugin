@@ -1,4 +1,4 @@
-Soar Debugger Vim Plugin
+Soar Vim Plugin
 Author: Aaron Mininger
 Written: Summer 2017
 
@@ -8,6 +8,28 @@ Purpose: This plugin is to integrate the soar debugger within a vim environment.
 	where you can edit and reload soar rules while the agent is running 
 
   This plugin also has a few features specific to the soargroup Rosie project 
+
+===================================================
+INSTALLATION
+
+Suggested directory location is ~/.vim/bundle
+
+* PLAIN (no plugin manager)
+Put the following in your vimrc:
+
+set runtimepath^=~/.vim/bundle/vim-soar-plugin
+
+set nocompatible
+filetype off
+filetype plugin indent on
+
+runtime plugin/vim-soar-plugin.vim
+
+
+* VUNDLE
+This plugin is compatible with vundle, just add the following line to your vimrc
+  to the section sourcing plugins (see github.com/VundleVim/Vundle.vim for more info)
+Plugin 'file:///home/user/.vim/bundle/vim-soar-plugin'
     
 ===================================================
 PROJECT ORGANIZATION

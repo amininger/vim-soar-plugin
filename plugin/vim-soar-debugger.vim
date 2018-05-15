@@ -8,6 +8,12 @@ else
 	finish
 endif
 
+" If you set the global variable enable_soar_plugin_mappings to 0
+" the plugin keybindings will be skipped
+if !exists('g:enable_soar_plugin_mappings')
+	let g:enable_soar_plugin_mappings = 1
+endif
+
 " Get directory of this file
 let s:plugin_root_dir = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 

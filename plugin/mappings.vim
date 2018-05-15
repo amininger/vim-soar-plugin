@@ -25,11 +25,10 @@ command! -nargs=1 -complete=customlist,ListSoarTemplates InsertTemplate :call In
 
 """"""""""""""""" Soar Plugin Key Mappings """""""""""""""""""
 
-" If you set the global variable disable_soar_plugin_mappings
-" the following keybindings will be skipped
-if exists('g:disable_soar_plugin_mappings')
+if !g:enable_soar_plugin_mappings
 	finish
 endif
+
 
 """""""""""""" parsing.vim """""""""""""""""
 

@@ -1,7 +1,8 @@
 """"""""""""""" FUNCTIONS """"""""""""""""""
 
 function! ListSoarTemplates(A,L,P)
-	let templatedir = $MY_VIM_DIR."/soar_plugin/templates/"
+	let s:plugin_root_dir = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+	let templatedir = s:plugin_root_dir.'/../templates'
 	let templates = split(globpath(templatedir, '*'), '\n')
 	let res = []
 	let pattern = "^".a:A
@@ -16,7 +17,8 @@ endfunction
 
 " Inserts the given template 
 function! InsertSoarTemplate(templateFile)
-  execute("r ".$MY_VIM_DIR."/soar_plugin/templates/".a:templateFile)
+	let s:plugin_root_dir = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+  execute("r ".s:plugin_root_dir."/../templates/".a:templateFile)
 
   let op_name = substitute(expand('%:t'), "\.soar", "", "g")
   execute("%s/__OP__NAME__/".op_name."/g")

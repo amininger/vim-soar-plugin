@@ -10,6 +10,22 @@ Purpose: This plugin is to integrate the soar debugger within a vim environment.
   This plugin also has a few features specific to the soargroup Rosie project 
 
 ===================================================
+PREREQUISITES
+
+The code for editing soar files has no prereqs
+
+Debugger: 
+
+SOAR with sml_python
+	You can pass --python=python3 into scons to compile with python 3
+	Add $SOAR_HOME to PYTHONPATH
+
+You need vim compiled with either python2 or python3 support
+
+You need pysoarlib on the PYTHONPATH
+	github.com/amininger/pysoarlib
+
+===================================================
 INSTALLATION
 
 Suggested directory location is ~/.vim/bundle

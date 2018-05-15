@@ -9,7 +9,6 @@ command! -nargs=0 AddFileToSource :call AddFileToSoarSource()
 """ debugger.vim """
 
 " Commands for using the soar debugger
-command! -nargs=? -complete=file OpenDebugger :call OpenSoarDebugger(<f-args>)
 command! -nargs=0 CloseDebugger :Python close_debugger()
 command! -nargs=0 ResetDebugger :Python reset_debugger()
 
@@ -27,7 +26,6 @@ command! -nargs=1 -complete=customlist,ListSoarTemplates InsertTemplate :call vi
 if !g:enable_soar_plugin_mappings
 	finish
 endif
-
 
 """""""""""""" parsing.vim """""""""""""""""
 

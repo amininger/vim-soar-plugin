@@ -40,3 +40,23 @@ function! vim_soar_plugin#OpenSoarDebugger(...)
 	Python agent.connect()
 endfunction
 
+function! vim_soar_plugin#OpenRosieDebugger()
+	let agent_name = input('Enter agent name: ', 'H-layout')
+	let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
+	call SetupDebuggerPanes()
+	call SetupAgentMethods()
+	Python from VimRosieAgent import VimRosieAgent
+	Python agent = VimRosieAgent(writer, config_filename=vim.eval("config_file"))
+	Python agent.connect()
+endfunction
+
+function! vim_soar_plugin#OpenRosieThorDebugger()
+	let agent_name = input('Enter agent name: ', 'ai2thor')
+	let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
+	call SetupDebuggerPanes()
+	call SetupAgentMethods()
+	Python from VimRosieAgent import VimRosieAgent
+	Python agent = VimRosieAgent(writer, config_filename=vim.eval("config_file"))
+	call LaunchAi2ThorSimulator()
+	Python agent.connect()
+endfunction

@@ -23,3 +23,7 @@ command! -nargs=1 -complete=customlist,ListSoarTemplates InsertSoarTemplate :cal
 " The rest of the plugin is found in autoload
 " Debugger commands aren't loaded until you call the OpenDebugger Command
 command! -nargs=? -complete=file OpenDebugger :call vim_soar_plugin#OpenSoarDebugger(<f-args>)
+
+command! -nargs=0 -complete=file RosieDebugger :call vim_soar_plugin#OpenRosieDebugger()
+
+command! -nargs=0 -complete=file ThorDebugger :call vim_soar_plugin#OpenRosieThorDebugger()

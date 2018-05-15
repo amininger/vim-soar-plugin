@@ -1,4 +1,4 @@
-Soar Debugger Vim Plugin
+Soar Vim Plugin
 Author: Aaron Mininger
 Written: Summer 2017
 
@@ -10,15 +10,16 @@ Purpose: This plugin is to integrate the soar debugger within a vim environment.
   This plugin also has a few features specific to the soargroup Rosie project 
     
 ===================================================
-FILE DESCRIPTIONS
+PROJECT ORGANIZATION
 
-plugin/util.vim: Contains general soar utility functions
-plugin/parsing.vim: Contains functions for parsing soar rules
-plugin/templates.vim: Contains functions for inserting templates of common soar rules
-plugin/debugger.vim: Contains functions for running the rosie agent within vim
-plugin/mappings.vim: Contains key bindings for debugger functionality 
-
-python/: contains python SML code used to interface with the soar debugger
+autoload  - Contains soar debugger specific code, only loaded when OpenDebugger command is executed
+doc       - Contains help for using the debugger
+ftdetect  - Tells vim to recognize the .soar file extension
+ftplugin  - Sets .soar file specific commands, including editing key mappings
+indent    - Code to properly indent soar files
+plugin    - Code that defines functions and commands for editing soar files
+python    - Python code that creates and runs soar agents for the debugger
+templates - Collection of soar templates that can be inserted through the InsertSoarTemplate command (you can add more)
 
 ==================================================
 RUNNING THE EXAMPLE AGENT (Basic Tutorial)
@@ -49,7 +50,7 @@ SourceCurrentFile           # The currently running agent will source the curren
 SourceSoarFile <filename>   # The currently running agent will source the specified file
 
 AddFileToSource             # Looks for <dir>_source.soar and appends a source command for the current file
-InsertTemplate <template>   # Inserts a soar template of the given template name into the current file
+InsertSoarTemplate <template>   # Inserts a soar template of the given template name into the current file
 
 ==================================================
 CONFIG FILE OPTIONS
@@ -67,10 +68,13 @@ write-log = <bool>        | If true, will write all soar output to a file called
 DEFAULT VIM MAPPINGS
 Many commands are ; followed by a shortcode
 This does remap the keyboard shortcuts for H U # and Ctrl+P
-To disable these shortcuts, define the following global variable in your vimrc
-	let g:disable_soar_plugin_mappings = 1
 
-#      | Execute a custom soar command
+To disable these shortcuts, define the following global variable in your vimrc
+	let g:enable_soar_plugin_mappings = 0
+
+""" Executing Soar Commands
+
+#      | Execute a custom soar command (will bring up prompt)
 
 """ Running the Agent
 H      | Run 1 decision cycle
@@ -102,5 +106,6 @@ U      | Run 10 decision cycles
 ;mp | Runs the matches command with the current production [cursor is inside production]
 ;mr | Runs the matches command with the current rule name [cursor is on rule name]
 
+""" TEMPLATES
 Ctrl+P | Goes to the next insertion point in a template (marked by #!#)
 

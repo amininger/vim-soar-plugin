@@ -31,7 +31,7 @@ exec "source ".s:autoload_root_dir."/rosie.vim"
 " Contains custom commands and key mappings
 exec "source ".s:autoload_root_dir."/mappings.vim"
 
-function! vim_soar_debugger#OpenSoarDebugger(...)
+function! vim_soar_plugin#OpenSoarDebugger(...)
 	let config_file = ""
 	if a:0 == 1
 		let config_file = a:1

@@ -1,8 +1,7 @@
 """"""""""""""" FUNCTIONS """"""""""""""""""
 
 function! ListSoarTemplates(A,L,P)
-	let s:plugin_root_dir = fnamemodify(resolve(expand('<sfile>:p')), ':h')
-	let templatedir = s:plugin_root_dir.'/../templates'
+	let templatedir = g:vim_soar_plugin_root_dir.'/templates'
 	let templates = split(globpath(templatedir, '*'), '\n')
 	let res = []
 	let pattern = "^".a:A
@@ -18,13 +17,13 @@ endfunction
 " Inserts the given template 
 function! InsertSoarTemplate(templateFile)
 	let s:plugin_root_dir = fnamemodify(resolve(expand('<sfile>:p')), ':h')
-  execute("r ".s:plugin_root_dir."/../templates/".a:templateFile)
+  execute("r ".g:vim_soar_plugin_root_dir."/templates/".a:templateFile)
 
   let op_name = substitute(expand('%:t'), "\.soar", "", "g")
-  execute("%s/__OP__NAME__/".op_name."/g")
+  execute("%s/__OP__NAME__/".op_name."/eg")
 
   let state_name = expand('%:p:h:t')
-  execute("%s/__STATE__NAME__/".state_name."/g")
+  execute("%s/__STATE__NAME__/".state_name."/eg")
 endfunction
 
 " Will search file for #!# and remove them and go to insert mode

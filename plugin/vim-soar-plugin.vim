@@ -1,14 +1,14 @@
 " Get directory of this file
-let s:plugin_root_dir = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+let g:vim_soar_plugin_root_dir = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
 
 " Contains general soar utility functions
-exec "source ".s:plugin_root_dir."/util.vim"
+exec "source ".g:vim_soar_plugin_root_dir."/plugin/util.vim"
 
 " Contains functions for parsing soar rules
-exec "source ".s:plugin_root_dir."/parsing.vim"
+exec "source ".g:vim_soar_plugin_root_dir."/plugin/parsing.vim"
 
 " Contains functions for inserting rule templates
-exec "source ".s:plugin_root_dir."/templates.vim"
+exec "source ".g:vim_soar_plugin_root_dir."/plugin/templates.vim"
 
 
 """"""""""""""""" Soar Plugin Commands """""""""""""""""""

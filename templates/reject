@@ -1,5 +1,6 @@
-sp {reject*operator*#!#
-   (state <s> ^operator <o> +)
+sp {__STATE__NAME__*reject*operator*#!#
+   (state <s> ^name __STATE__NAME__
+              ^operator <o> +)
    (<o> ^name #!#)
 -->
    (<s> ^operator <o> -)

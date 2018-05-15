@@ -1,0 +1,5 @@
+sp {__STATE__NAME__*elaborate*#!#
+   (state <s> ^name __STATE__NAME__#!#)
+-->
+   (<s> #!#)
+}

@@ -1,0 +1,76 @@
+# Simple agent which counts from 1 to 10
+
+sp {counting-agent*propose*init-agent
+   (state <s> ^superstate nil
+             -^name counting-agent)
+-->
+   (<s> ^operator <o> + >)
+   (<o> ^name init-agent)
+}
+
+sp {counting-agent*apply*init-agent
+   (state <s> ^superstate nil
+              ^operator.name init-agent)
+-->
+   (<s> ^name counting-agent)
+}
+
+sp {counting-agent*apply*init-agent*add*number*info
+   (state <s> ^superstate nil
+              ^operator.name init-agent)
+-->
+   (<s> ^current-number 1
+        ^max-number 10)
+}
+
+sp {counting-agent*propose*count
+   (state <s> ^name counting-agent
+              ^current-number <n>
+              ^max-number >= <n>)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name count
+        ^number <n>)
+}
+
+sp {counting-agent*apply*count*write*number
+   (state <s> ^name counting-agent
+              ^operator <o>)
+   (<o> ^name count
+        ^number <n>)
+-->
+   (write (crlf) |Counting | <n>)
+}
+
+sp {counting-agent*apply*count*increment*current-number
+   (state <s> ^name counting-agent
+              ^operator <o>
+              ^current-number <n>)
+   (<o> ^name count
+        ^number <n>)
+-->
+   (<s> ^current-number <n> -
+        ^current-number (+ <n> 1))
+}
+
+sp {counting-agent*propose*wait
+   (state <s> ^name counting-agent
+             -^operator.name wait)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name wait)
+}
+
+
+sp {counting-agent*prefer*count*over*wait
+   (state <s> ^name counting-agent
+              ^operator <o1> +
+              ^operator <o2> +)
+   (<o1> ^name count)
+   (<o2> ^name wait)
+-->
+   (<s> ^operator <o1> > <o2>)
+}
+
+
+

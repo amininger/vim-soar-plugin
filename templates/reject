@@ -1,0 +1,6 @@
+sp {reject*operator*#!#
+   (state <s> ^operator <o> +)
+   (<o> ^name #!#)
+-->
+   (<s> ^operator <o> -)
+}

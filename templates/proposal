@@ -1,0 +1,6 @@
+sp {__STATE__NAME__*propose*__OP__NAME__*#!#
+   (state <s> ^name __STATE__NAME__#!#)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name __OP__NAME__#!#)
+}

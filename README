@@ -1,0 +1,106 @@
+Soar Debugger Vim Plugin
+Author: Aaron Mininger
+Written: Summer 2017
+
+Purpose: This plugin is to integrate the soar debugger within a vim environment.
+  It will mimic the soar debugger layout and allow normal debugging operations.
+  The big benefit is interleaving editing and testing soar agents, 
+	where you can edit and reload soar rules while the agent is running 
+
+  This plugin also has a few features specific to the soargroup Rosie project 
+    
+===================================================
+DIRECTORY STRUCTURE
+
+util.vim: Contains general soar utility functions
+parsing.vim: Contains functions for parsing soar rules
+templates.vim: Contains functions for inserting templates of common soar rules
+debugger.vim: Contains functions for running the rosie agent within vim
+mappings.vim: Contains key bindings for debugger functionality 
+
+pylib: contains python SML code used to interface with the soar debugger
+
+==================================================
+RUNNING THE EXAMPLE AGENT (Basic Tutorial)
+
+1. Open vim in the current (soar_plugin) directory
+2. Run the command :OpenDebugger example.config
+   This will open the debugger window layout and put the agent in a ready state
+3. Type # to bring up a soar prompt, then enter 'p s1' to print the top-state
+4. Type H. This should run 1 DC and do the init-agent operator
+5. Move the cursor to the O1 identifier and type ;p2, this will print O1 to a depth of 2
+6. Type ;ma which will run the matches command, showing which rules match
+7. Move the cursor to the counting-agent*apply*init-agent rule name and type ;pr
+   This will print the production with the rule name under the cursor
+8. Move the cursor inside the printed production and type ;mp
+   This will show why the production currently matches
+9. Type U which will run the agent 10 decision cycles (it should count from 1-10)
+10. Type :CloseDebugger to close the debugger
+
+==================================================
+DEBUGGER COMMANDS
+
+OpenDebugger <config-file>  # Launch the debugger
+							# You can pass an optional <config-file> to use to initialize the agent (details below)
+ResetDebugger               # Complete destroys and restarts the agent from a clean state (discards learned rules)
+CloseDebugger               # Closes the debugger and deletes the agent
+
+SourceCurrentFile           # The currently running agent will source the current file
+SourceSoarFile <filename>   # The currently running agent will source the specified file
+
+AddFileToSource             # Looks for <dir>_source.soar and appends a source command for the current file
+InsertTemplate <template>   # Inserts a soar template of the given template name into the current file
+
+==================================================
+CONFIG FILE OPTIONS
+agent-name = <string>     | The name of the agent
+agent-source = <filename> | The soar file to source
+smem-source = <filename>  | The soar file sourcing any smem code
+
+verbose = <bool>          | If true, prints extra information when sourcing the agent (default=false)
+watch-level = <int>       | The watch level to print information at (default=1)
+spawn-debugger = <bool>   | If true, will spawn the soar debugger externally (default=false)
+write-to_stdout = <bool>  | If true, will print all output to std out (default=false) 
+write-log = <bool>        | If true, will write all soar output to a file called agent-log.txt
+
+==================================================
+DEFAULT VIM MAPPINGS
+Many commands are ; followed by a shortcode
+This does remap the keyboard shortcuts for H U # and Ctrl+P
+To disable these shortcuts, define the following global variable in your vimrc
+	let g:disable_soar_plugin_mappings = 1
+
+#      | Execute a custom soar command
+
+""" Running the Agent
+H      | Run 1 decision cycle
+U      | Run 10 decision cycles
+;re    | Run 1 elaboration cycle (run 1 -e)
+
+""" PRINTING
+;pr | Prints the full production [cursor is on rule name]
+;p# | Print the current identifier to # depth (;p2 ;p4 ...) [cursor is on identifier]
+
+""" COPYING
+;yp | Yank (to buffer) the current production [cursor is inside production]
+;yr | Yank (to buffer) the current rule name [cursor is on rule name]
+;cp | Copy (to clipboard) the current production [cursor is inside production]
+;cr | Copy (to clipboard) the current rule name [cursor is on rule name]
+
+""" DELETING
+;dp | Delete the current production [cursor is inside production]
+
+""" SOURCING
+;sp | Source the current production [cursor is inside production]
+
+""" EXCISING
+;ep | Excises the current production [cursor is inside production]
+;er | Excises the current rule [cursor is on rule name]
+
+""" MATCHING
+;ma | Runs the matches command
+;mp | Runs the matches command with the current production [cursor is inside production]
+;mr | Runs the matches command with the current rule name [cursor is on rule name]
+
+Ctrl+P | Goes to the next insertion point in a template (marked by #!#)
+

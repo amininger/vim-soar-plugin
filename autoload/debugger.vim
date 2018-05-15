@@ -1,15 +1,3 @@
-function! OpenSoarDebugger(...)
-	let config_file = ""
-	if a:0 == 1
-		let config_file = a:1
-	endif
-	echom config_file
-	call SetupDebuggerPanes()
-	call SetupAgentMethods()
-	Python agent = VimSoarAgent(writer, config_filename=vim.eval("config_file"))
-	Python agent.connect()
-endfunction
-
 function! SetupDebuggerPanes()
 	exec "e __MAIN_PANE__"
 	exec "setlocal buftype=nofile"

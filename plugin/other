@@ -45,3 +45,16 @@ exec "source ".s:autoload_root_dir."/rosie.vim"
 
 " Contains custom commands and key mappings
 exec "source ".s:autoload_root_dir."/mappings.vim"
+
+function! vim_soar_debugger#OpenSoarDebugger(...)
+	let config_file = ""
+	if a:0 == 1
+		let config_file = a:1
+	endif
+	echom config_file
+	call SetupDebuggerPanes()
+	call SetupAgentMethods()
+	Python agent = VimSoarAgent(writer, config_filename=vim.eval("config_file"))
+	Python agent.connect()
+endfunction
+

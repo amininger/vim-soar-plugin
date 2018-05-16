@@ -45,10 +45,12 @@ class VimWriter:
         if scroll:
             window.cursor = (len(window.buffer), 0)
         if window != VimWriter.MAIN_PANE:
-            prev_win = vim.current.window
-            vim.current.window = window
-            vim.command("redraw!")
-            vim.current.window = prev_win
+            cur_name = vim.current.window.buffer.name.split("/")[-1]
+            if cur_name in VimWriter.window_names.values():
+                prev_win = vim.current.window
+                vim.current.window = window
+                vim.command("redraw!")
+                vim.current.window = prev_win
 
     def get_window(self, window):
         """ Returns a reference to the vim window with the given identifier """

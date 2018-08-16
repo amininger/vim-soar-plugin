@@ -44,7 +44,7 @@ class VimWriter:
             window.buffer.append(line)
         if scroll:
             window.cursor = (len(window.buffer), 0)
-        if window != VimWriter.MAIN_PANE:
+        if window != VimWriter.MAIN_PANE and window in vim.windows:
             prev_win = vim.current.window
             vim.current.window = window
             vim.command("redraw!")

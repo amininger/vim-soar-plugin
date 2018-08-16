@@ -3,16 +3,15 @@
 function! LaunchAi2ThorSimulator()
 Python << EOF
 
-from rosiethor import Ai2ThorSimulator, PerceptionConnector, ActuationConnector
+from rosiethor import Ai2ThorSimulator, PerceptionConnector, RobotConnector
 
 simulator = Ai2ThorSimulator()
+simulator.start()
 
 agent.connectors["perception"] = PerceptionConnector(agent, simulator)
 agent.connectors["perception"].print_handler = lambda message: writer.write(message)
-agent.connectors["actuation"] = ActuationConnector(agent, simulator)
-agent.connectors["actuation"].print_handler = lambda message: writer.write(message)
-
-simulator.start()
+agent.connectors["robot"] = RobotConnector(agent, simulator)
+agent.connectors["robot"].print_handler = lambda message: writer.write(message)
 
 EOF
 endfunction

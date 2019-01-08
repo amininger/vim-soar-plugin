@@ -30,13 +30,14 @@ class VimWriter:
                     del window.buffer[:]
                     break
 
-    def write(self, message, window=MAIN_PANE, clear=False, scroll=True):
+    def write(self, message, window=MAIN_PANE, clear=False, scroll=True, strip=True):
         """ appends the given message onto the given window
 
         clear, True will delete the existing window contents before appending
         scroll, True will scroll the window to the bottom after appending
         """
-        message = message.strip()
+        if strip:
+            message = message.strip()
         window = self.win_map[window]
         if clear:
             del window.buffer[:]

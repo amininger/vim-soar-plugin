@@ -53,13 +53,13 @@ def obj_arg_to_string(obj_id):
     if len(obj_desc) > 0:
         obj_desc = obj_desc[:-1]
 
-    return obj_desc.translate(None, digits)
+    return obj_desc.translate(str.maketrans('', '', digits))
 
 class ActionStackConnector(AgentConnector):
     def __init__(self, agent, writer):
         AgentConnector.__init__(self, agent, print_handler=lambda message: writer.write(message, VimWriter.MAIN_PANE, clear=False, scroll=True))
 
-        self.print_action = lambda message: writer.write(message, VimWriter.SIDE_PANE_MID, clear=False, scroll=True)
+        self.print_action = lambda message: writer.write(message, VimWriter.SIDE_PANE_MID, clear=False, scroll=True, strip=False)
 
         self.add_output_command("started-action")
         self.add_output_command("completed-action")

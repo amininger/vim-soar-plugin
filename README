@@ -144,6 +144,10 @@ U      | Run 10 decision cycles
 ;mp | Runs the matches command with the current production [cursor is inside production]
 ;mr | Runs the matches command with the current rule name [cursor is on rule name]
 
+""" Print firing count
+;fcp | Runs the fc command with the current production [cursor is inside production]
+;fcr | Runs the fc command with the current rule name [cursor is on rule name]
+
 """ TEMPLATES
 Ctrl+P | Goes to the next insertion point in a template (marked by #!#)
 

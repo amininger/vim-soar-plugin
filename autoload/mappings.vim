@@ -38,6 +38,8 @@ nnoremap ;sp :call ExecuteSoarCommand(GetCurrentSoarRuleBody())<CR>
 nnoremap ;mp :call ExecuteSoarCommand("matches ".GetCurrentSoarRuleName())<CR>
 " excise production
 nnoremap ;ep :call ExecuteSoarCommand("excise ".GetCurrentSoarRuleName())<CR>
+" firing count of production
+nnoremap ;fcp :call ExecuteSoarCommand("fc ".GetCurrentSoarRuleName())<CR>
 
 " print rule by name
 nnoremap ;pr :call ExecuteSoarCommand("p ".GetStrippedCurrentWord())<CR>
@@ -45,6 +47,9 @@ nnoremap ;pr :call ExecuteSoarCommand("p ".GetStrippedCurrentWord())<CR>
 nnoremap ;mr :call ExecuteSoarCommand("matches ".GetStrippedCurrentWord())<CR>
 " excise rule name
 nnoremap ;er :call ExecuteSoarCommand("excise ".GetStrippedCurrentWord())<CR>
+" firing count of rule name
+nnoremap ;fcr :call ExecuteSoarCommand("fc ".GetStrippedCurrentWord())<CR>
+
 
 " print wmes
 nnoremap ;p1 :<C-U>call ExecuteSoarCommand("p ".GetStrippedCurrentWord())<CR>

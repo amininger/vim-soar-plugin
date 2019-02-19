@@ -3,7 +3,7 @@
 function! LaunchAi2ThorSimulator()
 Python << EOF
 
-from rosiethor import Ai2ThorSimulator, PerceptionConnector, RobotConnector
+from rosiethor import MapUtil, NavigationHelper, Ai2ThorSimulator, PerceptionConnector, RobotConnector
 
 simulator = Ai2ThorSimulator()
 simulator.start()

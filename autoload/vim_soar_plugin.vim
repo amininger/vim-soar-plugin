@@ -41,7 +41,7 @@ function! vim_soar_plugin#OpenSoarDebugger(...)
 endfunction
 
 function! vim_soar_plugin#OpenRosieDebugger()
-	let agent_name = input('Enter agent name: ', 'H-layout')
+	let agent_name = input('Enter agent name: ', 'test-task-learning')
 	let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
 	call SetupDebuggerPanes()
 	call SetupAgentMethods()

@@ -99,4 +99,13 @@ function! SaveSimulatorState()
 	Python if simulator: simulator.save()
 endfunction
 
+" Will reject all operators with the given name for 1 elaboration cycle,
+" enough to re-enter the op no-change substate (useful when debugging)
+function! RejectSoarOperator(op_name)
+	let rej_prod = "sp {DEBUG*REJ (state <s> ^operator (<o> ^name ".a:op_name.") +) --> (<s> ^operator <o> -) }"
+	call ExecuteSoarCommand(rej_prod)
+	call ExecuteSoarCommand("run 1 -e")
+	call ExecuteSoarCommand("excise DEBUG*REJ")
+endfunction
+
 

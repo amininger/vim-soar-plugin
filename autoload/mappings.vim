@@ -10,6 +10,9 @@ command! -nargs=0 SourceCurrentFile :call ExecuteSoarCommand("source ".expand('%
 " Source a specified file into the running soar agent (debugger.vim)
 command! -nargs=1 -complete=file SourceSoarFile :call SourceSoarFile(<f-args>)
 
+" Will reject all operators with the given name (helpful to reset a substate) (debugger.vim)
+command! -nargs=1 RejectSoarOperator :call RejectSoarOperator(<f-args>)
+
 """"""""""""""""" Soar Plugin Key Mappings """""""""""""""""""
 
 " If you set the global variable enable_soar_plugin_mappings to 0
@@ -24,10 +27,15 @@ endif
 " Execute an arbitrary soar command
 nnoremap # :call ExecuteUserSoarCommand()<CR>
 
+" Step 1
 nnoremap H :Python step(1)<CR>
+" Run 10 dc
 nnoremap U :Python step(10)<CR>
+" Run 1000 dc (Bad to run forever, will block all other commands)
+nnoremap ;ru :Python step(1000)<CR>
 " Run 1 elaboration cycle
 nnoremap ;re :Python agent.execute_command("run 1 -e")<CR>
+
 
 " See which rules currently match
 nnoremap ;ma :Python agent.execute_command("matches")<CR>

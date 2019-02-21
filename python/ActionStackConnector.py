@@ -28,7 +28,7 @@ def task_arg_to_string(arg_id):
     arg_type = arg_id.GetChildString("arg-type")
     if arg_type == "object":
         return obj_arg_to_string(arg_id.GetChildId("id"))
-    elif arg_type == "predicate":
+    elif arg_type == "partial-predicate":
         handle_str = arg_id.GetChildString("handle")
         obj2_str = obj_arg_to_string(arg_id.GetChildId("2"))
         return "%s(%s)" % ( handle_str, obj2_str )

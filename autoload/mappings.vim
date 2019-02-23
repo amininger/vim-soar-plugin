@@ -31,8 +31,18 @@ nnoremap # :call ExecuteUserSoarCommand()<CR>
 nnoremap H :Python step(1)<CR>
 " Run 10 dc
 nnoremap U :Python step(10)<CR>
+" Run # = run x100 
+nnoremap ;r1 :Python run_silent(100)<CR>
+nnoremap ;r2 :Python run_silent(200)<CR>
+nnoremap ;r3 :Python run_silent(300)<CR>
+nnoremap ;r4 :Python run_silent(400)<CR>
+nnoremap ;r5 :Python run_silent(500)<CR>
+nnoremap ;r6 :Python run_silent(600)<CR>
+nnoremap ;r7 :Python run_silent(700)<CR>
+nnoremap ;r8 :Python run_silent(800)<CR>
+nnoremap ;r9 :Python run_silent(900)<CR>
 " Run 1000 dc (Bad to run forever, will block all other commands)
-nnoremap ;ru :Python step(1000)<CR>
+nnoremap ;ru :Python run_silent(1000)<CR>
 " Run 1 elaboration cycle
 nnoremap ;re :Python agent.execute_command("run 1 -e")<CR>
 

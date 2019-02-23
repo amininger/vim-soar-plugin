@@ -66,6 +66,12 @@ def step(num):
 	agent.agent.RunSelf(num)
 	agent.update_debugger_info()
 
+def run_silent(num_dcs):
+	agent.start_buffering_output()
+	agent.agent.RunSelf(num_dcs)
+	agent.stop_buffering_output()
+	agent.update_debugger_info()
+
 def reset_debugger():
 	writer.clear_all_windows()
 	agent.reset()

@@ -5,13 +5,16 @@ Python << EOF
 
 from rosiethor import MapUtil, NavigationHelper, Ai2ThorSimulator, PerceptionConnector, RobotConnector
 
+scene_name = agent.settings.get("ai2thor_scene", "testing")
+
 simulator = Ai2ThorSimulator()
-simulator.start()
 
 agent.connectors["perception"] = PerceptionConnector(agent, simulator)
 agent.connectors["perception"].print_handler = lambda message: writer.write(message)
 agent.connectors["robot"] = RobotConnector(agent, simulator)
 agent.connectors["robot"].print_handler = lambda message: writer.write(message)
+
+simulator.start(scene_name)
 
 EOF
 endfunction

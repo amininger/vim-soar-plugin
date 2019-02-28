@@ -78,6 +78,8 @@ def reset_debugger():
 
 def close_debugger():
 	agent.kill()
+	if simulator:
+		simulator.stop()
 	while len(vim.windows) > 1:
 		vim.command("q!")
 	vim.command("e! temp")

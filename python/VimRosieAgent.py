@@ -16,7 +16,7 @@ class VimRosieAgent(VimSoarAgent):
 
         if self.messages_file != None:
             with open(self.messages_file, 'r') as f:
-                vim.command("let g:rosie_messages = [\"" + "\",\"".join([ line.rstrip('\n') for line in f.readlines()]) + "\"]")
+                vim.command("let g:rosie_messages = [\"" + "\",\"".join([ line.rstrip('\n') for line in f.readlines() if len(line.rstrip('\n')) > 0 and line[0] != '#']) + "\"]")
 
         self.connectors["language"] = VimLanguageConnector(self, writer)
         self.connectors["language"].register_message_callback(lambda message: writer.write(message, VimWriter.SIDE_PANE_TOP, clear=False, scroll=True))
@@ -25,5 +25,5 @@ class VimRosieAgent(VimSoarAgent):
 
     def update_debugger_info(self):
         stack = self.agent.ExecuteCommandLine("p --stack", False)
-        self.vim_writer.write(stack, VimWriter.SIDE_PANE_BOT, clear=True, scroll=False)
+        self.vim_writer.write(stack, VimWriter.SIDE_PANE_BOT, clear=True, scroll=True)
 

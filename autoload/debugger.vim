@@ -62,6 +62,9 @@ from VimWriter import VimWriter
 
 writer = VimWriter()
 
+GLOBAL_STATE = {}
+run_thread = None
+
 def step(num):
 	agent.agent.RunSelf(num)
 	agent.update_debugger_info()
@@ -80,6 +83,9 @@ def close_debugger():
 	agent.kill()
 	if simulator:
 		simulator.stop()
+	if run_thread:
+		GLOBAL_STATE["running"] = False
+		run_thread.join()
 	while len(vim.windows) > 1:
 		vim.command("q!")
 	vim.command("e! temp")

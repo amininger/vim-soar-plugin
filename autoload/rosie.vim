@@ -19,6 +19,38 @@ simulator.start(scene_name)
 EOF
 endfunction
 
+function! LaunchCozmoRobot()
+Python << EOF
+
+import cozmo
+import pysoarlib
+
+from threading import Thread
+from time import sleep
+
+from cozmosoar.c_soar_util import COZMO_COMMANDS
+from cozmosoar.cozmo_soar import CozmoSoar
+
+def create_robot_connector(robot: cozmo.robot):
+	cozmo_robot = CozmoSoar(agent, robot)
+	for command in COZMO_COMMANDS:
+		cozmo_robot.add_output_command(command)
+	cozmo_robot.print_handler = lambda message: writer.write(message)
+	agent.add_connector("cozmo", cozmo_robot)
+	cozmo_robot.connect()
+	GLOBAL_STATE["running"] = True
+	while GLOBAL_STATE["running"]:
+		sleep(0.1)
+
+def cozmo_thread():
+	cozmo.run_program(create_robot_connector)
+
+run_thread = Thread(target=cozmo_thread)
+run_thread.start()
+
+EOF
+endfunction
+
 function! ListRosieMessages(A,L,P)
 	if !exists("g:rosie_messages")
 		let msgs = []

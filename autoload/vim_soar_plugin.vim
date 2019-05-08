@@ -63,3 +63,15 @@ function! vim_soar_plugin#OpenRosieThorDebugger()
 	call LaunchAi2ThorSimulator()
 	Python agent.connect()
 endfunction
+
+function! vim_soar_plugin#OpenRosieCozmoDebugger()
+	let agent_name = input('Enter agent name: ', 'cozmo')
+	let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
+	call SetupDebuggerPanes()
+	call SetupAgentMethods()
+	Python from VimRosieAgent import VimRosieAgent
+	Python simulator = None
+	Python agent = VimRosieAgent(writer, config_filename=vim.eval("config_file"))
+	call LaunchCozmoRobot()
+	Python agent.connect()
+endfunction

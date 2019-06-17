@@ -1,39 +1,52 @@
 """" Rosie Specific Functionality """"
 
-function! OpenRosieDebugger()
-	let agent_name = input('Enter agent name: ', 'H-layout')
-	let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
-	call SetupDebuggerPanes()
-	call SetupAgentMethods()
-	Python from VimRosieAgent import VimRosieAgent
-	Python agent = VimRosieAgent(writer, config_filename=vim.eval("config_file"))
-	Python agent.connect()
-endfunction
-
-function! OpenRosieThorDebugger()
-	let agent_name = input('Enter agent name: ', 'ai2thor')
-	let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
-	call SetupDebuggerPanes()
-	call SetupAgentMethods()
-	Python from VimRosieAgent import VimRosieAgent
-	Python agent = VimRosieAgent(writer, config_filename=vim.eval("config_file"))
-	call LaunchAi2ThorSimulator()
-	Python agent.connect()
-endfunction
-
 function! LaunchAi2ThorSimulator()
 Python << EOF
 
-from rosiethor import Ai2ThorSimulator, PerceptionConnector, ActuationConnector
+from rosiethor import MapUtil, NavigationHelper, Ai2ThorSimulator, PerceptionConnector, RobotConnector
+
+scene_name = agent.settings.get("ai2thor_scene", "testing")
 
 simulator = Ai2ThorSimulator()
 
 agent.connectors["perception"] = PerceptionConnector(agent, simulator)
 agent.connectors["perception"].print_handler = lambda message: writer.write(message)
-agent.connectors["actuation"] = ActuationConnector(agent, simulator)
-agent.connectors["actuation"].print_handler = lambda message: writer.write(message)
+agent.connectors["robot"] = RobotConnector(agent, simulator)
+agent.connectors["robot"].print_handler = lambda message: writer.write(message)
 
-simulator.start()
+simulator.start(scene_name)
+
+EOF
+endfunction
+
+function! LaunchCozmoRobot()
+Python << EOF
+
+import cozmo
+import pysoarlib
+
+from threading import Thread
+from time import sleep
+
+from cozmosoar.c_soar_util import COZMO_COMMANDS
+from cozmosoar.cozmo_soar import CozmoSoar
+
+def create_robot_connector(robot: cozmo.robot):
+	cozmo_robot = CozmoSoar(agent, robot)
+	for command in COZMO_COMMANDS:
+		cozmo_robot.add_output_command(command)
+	cozmo_robot.print_handler = lambda message: writer.write(message)
+	agent.add_connector("cozmo", cozmo_robot)
+	cozmo_robot.connect()
+	GLOBAL_STATE["running"] = True
+	while GLOBAL_STATE["running"]:
+		sleep(0.1)
+
+def cozmo_thread():
+	cozmo.run_program(create_robot_connector)
+
+run_thread = Thread(target=cozmo_thread)
+run_thread.start()
 
 EOF
 endfunction

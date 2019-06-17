@@ -18,6 +18,18 @@ class VimSoarAgent(SoarAgent):
         prefs = self.agent.ExecuteCommandLine("preferences <s> operator --names", False)
         self.vim_writer.write(prefs, VimWriter.SIDE_PANE_MID, clear=True, scroll=False)
         stack = self.agent.ExecuteCommandLine("p --stack", False)
-        self.vim_writer.write(stack, VimWriter.SIDE_PANE_BOT, clear=True, scroll=False)
+        self.vim_writer.write(stack, VimWriter.SIDE_PANE_BOT, clear=True, scroll=True)
+
+    def start_buffering_output(self):
+        self.buffered_output = []
+        self.print_handler = lambda message: self.buffered_output.append(message)
+
+    def stop_buffering_output(self):
+        self.print_handler = lambda message: self.vim_writer.write(message, VimWriter.MAIN_PANE, clear=False, scroll=True)
+        self.print_handler("\n".join(self.buffered_output))
+        self.buffered_output = []
+
+
+        
 
 

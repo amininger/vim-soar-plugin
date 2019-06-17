@@ -62,8 +62,17 @@ from VimWriter import VimWriter
 
 writer = VimWriter()
 
+GLOBAL_STATE = {}
+run_thread = None
+
 def step(num):
 	agent.agent.RunSelf(num)
+	agent.update_debugger_info()
+
+def run_silent(num_dcs):
+	agent.start_buffering_output()
+	agent.agent.RunSelf(num_dcs)
+	agent.stop_buffering_output()
 	agent.update_debugger_info()
 
 def reset_debugger():
@@ -72,6 +81,11 @@ def reset_debugger():
 
 def close_debugger():
 	agent.kill()
+	if simulator:
+		simulator.stop()
+	if run_thread:
+		GLOBAL_STATE["running"] = False
+		run_thread.join()
 	while len(vim.windows) > 1:
 		vim.command("q!")
 	vim.command("e! temp")
@@ -97,6 +111,15 @@ endfunction
 
 function! SaveSimulatorState()
 	Python if simulator: simulator.save()
+endfunction
+
+" Will reject all operators with the given name for 1 elaboration cycle,
+" enough to re-enter the op no-change substate (useful when debugging)
+function! RejectSoarOperator(op_name)
+	let rej_prod = "sp {DEBUG*REJ (state <s> ^operator (<o> ^name ".a:op_name.") +) --> (<s> ^operator <o> -) }"
+	call ExecuteSoarCommand(rej_prod)
+	call ExecuteSoarCommand("run 1 -e")
+	call ExecuteSoarCommand("excise DEBUG*REJ")
 endfunction
 
 

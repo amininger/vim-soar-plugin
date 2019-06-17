@@ -30,13 +30,15 @@ class VimWriter:
                     del window.buffer[:]
                     break
 
-    def write(self, message, window=MAIN_PANE, clear=False, scroll=True):
+    def write(self, message, window=MAIN_PANE, clear=False, scroll=True, strip=True):
         """ appends the given message onto the given window
 
         clear, True will delete the existing window contents before appending
         scroll, True will scroll the window to the bottom after appending
+        strip, True will strip whitespace from message beginning and end
         """
-        message = message.strip()
+        if strip:
+            message = message.strip()
         window = self.win_map[window]
         if clear:
             del window.buffer[:]
@@ -44,13 +46,11 @@ class VimWriter:
             window.buffer.append(line)
         if scroll:
             window.cursor = (len(window.buffer), 0)
-        if window != VimWriter.MAIN_PANE:
-            cur_name = vim.current.window.buffer.name.split("/")[-1]
-            if cur_name in VimWriter.window_names.values():
-                prev_win = vim.current.window
-                vim.current.window = window
-                vim.command("redraw!")
-                vim.current.window = prev_win
+        if window != VimWriter.MAIN_PANE and window in vim.windows:
+            prev_win = vim.current.window
+            vim.current.window = window
+            vim.command("redraw!")
+            vim.current.window = prev_win
 
     def get_window(self, window):
         """ Returns a reference to the vim window with the given identifier """

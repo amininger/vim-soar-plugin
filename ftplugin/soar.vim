@@ -16,17 +16,24 @@ if !g:enable_soar_plugin_mappings
 endif
 
 """""""""""""" parsing.vim """""""""""""""""
-
-" delete production
-nnoremap <buffer> ;dp :call DeleteCurrentSoarRule()<CR>
 " yank production (to vim buffer)
-nnoremap <buffer> ;yp :let @" = GetCurrentSoarRuleBody()<CR>
+nnoremap <buffer> ;yp :let @" = GetSoarProductionBody()<CR>
 " yank rule name (to vim buffer)
-nnoremap <buffer> ;yr :let @" = GetStrippedCurrentWord()<CR>
+nnoremap <buffer> ;yr :let @" = GetSoarWord()<CR>
 " copy production (to clipboard)
-nnoremap <buffer> ;cp :let @+ = GetCurrentSoarRuleBody()<CR>
+nnoremap <buffer> ;cp :let @+ = GetSoarProductionBody()<CR>
 " copy rule name (to clipboard)
-nnoremap <buffer> ;cr :let @+ = GetStrippedCurrentWord()<CR>
+nnoremap <buffer> ;cr :let @+ = GetSoarWord()<CR>
+
+"""""""""""""" editing.vim """""""""""""""""
+" delete production
+nnoremap <buffer> ;dp :call DeleteSoarProduction()<CR>
+" comment current production
+nnoremap <buffer> ;#p :let @+ = CommentSoarProduction()<CR>
+nnoremap <buffer> ;3p :let @+ = CommentSoarProduction()<CR>
+" uncomment current production
+nnoremap <buffer> ;u#p :let @+ = UncommentSoarProduction()<CR>
+nnoremap <buffer> ;u3p :let @+ = UncommentSoarProduction()<CR>
 
 """""""""""""""" templates.vim """"""""""""""""""
 

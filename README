@@ -10,6 +10,22 @@ Purpose: This plugin is to integrate the soar debugger within a vim environment.
   This plugin also has a few features specific to the soargroup Rosie project 
 
 ===================================================
+PREREQUISITES
+
+The code for editing soar files has no prereqs
+
+DEBUGGER ONLY: 
+
+SOAR with sml_python
+	You can pass --python=python3 into scons to compile with python 3
+	Add $SOAR_HOME to PYTHONPATH
+
+You need vim compiled with either python2 or python3 support
+
+You need pysoarlib on the PYTHONPATH
+	github.com/amininger/pysoarlib
+
+===================================================
 INSTALLATION
 
 Suggested directory location is ~/.vim/bundle
@@ -42,6 +58,67 @@ indent    - Code to properly indent soar files
 plugin    - Code that defines functions and commands for editing soar files
 python    - Python code that creates and runs soar agents for the debugger
 templates - Collection of soar templates that can be inserted through the InsertSoarTemplate command (you can add more)
+
+==================================================
+EDITING COMMANDS AND FEATURES
+
+Even if you don't run the debugger, this plugin offers useful features for editing .soar files
+
+""" COPYING
+;yp | Yank (to buffer) the current production [cursor is inside production]
+;yr | Yank (to buffer) the current rule name [cursor is on rule name]
+;cp | Copy (to clipboard) the current production [cursor is inside production]
+;cr | Copy (to clipboard) the current rule name [cursor is on rule name]
+
+""" DELETING
+;dp | Delete the current production [cursor is inside production]
+
+""" COMMENTING
+;#p | Comment the current production [cursor is inside production]
+;u#p | Uncomment the current production [cursor is inside production]
+(can also use ;3p and ;u3p respectively)
+
+
+""" Managing Source Files
+
+:AddFileToSoarSource
+	Looks for a file in the same directory called <dir_name>_source.soar
+	And will append a line 'source <cur_file>'
+
+:SourceSoarDirectory <soar_dir>
+	Will add 3 lines to the current file which will source a soar directory of the given name:
+		pushd <soar_dir>
+		source <soar_dir>_source.soar
+		popd
+	Autocompletes using current subdirectories
+
+
+""" Other useful functions for parsing soar productions
+
+GetSoarProductionBody(line_num)
+	Returns the production a the given line (as a string)
+	If line_num is not given, this will use the current cursor position
+
+GetSoarProductionName(line_num)
+	Returns the name of the production at the given line
+	If line_num is not given, this will use the current cursor position
+
+GetSoarWord(row, col)
+	Returns the soar word at the given position 
+	(considers a word to be alpha-numeric, plus underscore, hypthen, and asterisk)
+	If row/col are not given, this will use the current cursor position
+
+GetSoarProductionInfo(line_num, commented)
+	Gets information about the soar production at the given line number
+ 	  (line_num can be anywhere inside the production)
+ 	  If no line_num is given, uses the current cursor position
+ 	if commented is given and equals 1, this will look for #'s in front
+
+ 	returns a 3-index array if inside a production (empty array otherwise)
+ 	  prod_info[0] = production start line number
+ 	  prod_info[1] = production end line number
+ 	  prod_info[2] = production name
+
 
 ==================================================
 RUNNING THE EXAMPLE AGENT (Basic Tutorial)
@@ -102,6 +179,8 @@ To disable these shortcuts, define the following global variable in your vimrc
 H      | Run 1 decision cycle
 U      | Run 10 decision cycles
 ;re    | Run 1 elaboration cycle (run 1 -e)
+;r#    | Run #x100 decision cycles (e.g. ';r4 will run 400 decision cycles)
+;ru    | Run 1000 decision cycles
 
 """ PRINTING
 ;pr | Prints the full production [cursor is on rule name]
@@ -116,6 +195,11 @@ U      | Run 10 decision cycles
 """ DELETING
 ;dp | Delete the current production [cursor is inside production]
 
+""" COMMENTING
+;#p | Comment the current production [cursor is inside production]
+;u#p | Uncomment the current production [cursor is inside production]
+(can also use ;3p and ;u3p respectively)
+
 """ SOURCING
 ;sp | Source the current production [cursor is inside production]
 
@@ -127,6 +211,10 @@ U      | Run 10 decision cycles
 ;ma | Runs the matches command
 ;mp | Runs the matches command with the current production [cursor is inside production]
 ;mr | Runs the matches command with the current rule name [cursor is on rule name]
+
+""" Print firing count
+;fcp | Runs the fc command with the current production [cursor is inside production]
+;fcr | Runs the fc command with the current rule name [cursor is on rule name]
 
 """ TEMPLATES
 Ctrl+P | Goes to the next insertion point in a template (marked by #!#)

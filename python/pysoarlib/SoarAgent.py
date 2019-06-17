@@ -1,13 +1,12 @@
 from __future__ import print_function
 
-import sys
-import time
 from threading import Thread
+import traceback
+from time import sleep
 
 import Python_sml_ClientInterface as sml
 from .SoarWME import SoarWME
-
-current_time_ms = lambda: int(round(time.time() * 1000))
+from .TimeInfo import TimeInfo
 
 def parse_agent_kwargs_from_file(config_filename):
     """ Parses a config file and returns a dictionary with the parsed agent settings
@@ -23,25 +22,29 @@ def parse_agent_kwargs_from_file(config_filename):
         for line in fin:
             args = line.split()
             if len(args) == 3 and args[1] == '=':
-                props[args[0]] = args[2]
+                props[args[0].replace("-", "_")] = args[2]
 
     # Set config values
     kwargs = {}
-    kwargs["agent_name"] = props.get("agent-name", "soaragent")
-    kwargs["agent_source"] = props.get("agent-source", None)
-    kwargs["smem_source"] = props.get("smem-source", None)
+    kwargs["agent_name"] = props.get("agent_name", "soaragent")
+    kwargs["agent_source"] = props.get("agent_source", None)
+    kwargs["smem_source"] = props.get("smem_source", None)
 
-    kwargs["messages_file"] = props.get("messages-file", None)
+    kwargs["messages_file"] = props.get("messages_file", None)
 
     kwargs["verbose"] = props.get("verbose", "false").lower() == "true"
-    kwargs["watch_level"] = int(props.get("watch-level", "1"))
-    kwargs["spawn_debugger"] = props.get("spawn-debugger", "false").lower() == "true"
-    kwargs["write_to_stdout"] = props.get("write-to-stdout", "false").lower() == "true"
-    kwargs["enable_log"] = props.get("enable-log", "false").lower() == "true"
+    kwargs["watch_level"] = int(props.get("watch_level", "1"))
+    kwargs["spawn_debugger"] = props.get("spawn_debugger", "false").lower() == "true"
+    kwargs["write_to_stdout"] = props.get("write_to_stdout", "false").lower() == "true"
+    kwargs["enable_log"] = props.get("enable_log", "false").lower() == "true"
+
+    for prop in props:
+        if prop not in kwargs:
+            kwargs[prop] = props[prop]
 
     return kwargs
 
-class SoarAgent:
+class SoarAgent():
     """ A wrapper class for creating and using a soar SML Agent """
     def __init__(self, print_handler=None, config_filename=None, **kwargs):
         """ Will create a soar kernel and agent
@@ -80,6 +83,7 @@ class SoarAgent:
         
         Note: Still need to call connect() to register event handlers
         """
+
         if config_filename:
             # Add settings from config file if not overridden in kwargs
             config_kwargs = parse_agent_kwargs_from_file(config_filename)
@@ -87,6 +91,7 @@ class SoarAgent:
                 if key not in kwargs:
                     kwargs[key] = value
 
+        self.settings = kwargs
         self.agent_name = kwargs.get("agent_name", "soaragent")
         self.agent_source = kwargs.get("agent_source", None)
         self.smem_source = kwargs.get("smem_source", None)
@@ -110,11 +115,6 @@ class SoarAgent:
         self.kernel = sml.Kernel.CreateKernelInNewThread()
         self.kernel.SetAutoCommit(False)
 
-        self.start_time = current_time_ms()
-        self.time_id = None
-        self.seconds = SoarWME("seconds", 0)
-        self.steps = SoarWME("steps", 0)
-
         if self.enable_log:
             self.log_writer = open("agent-log.txt", 'w')
 
@@ -123,7 +123,9 @@ class SoarAgent:
         self.init_agent_callback_id = -1
         self.connectors = {}
 
-        self.__create_soar_agent()
+        self.time_info = TimeInfo()
+
+        self._create_soar_agent()
 
     def add_connector(self, name, connector):
         """ Adds an AgentConnector to the agent """
@@ -135,7 +137,7 @@ class SoarAgent:
             return
 
         self.is_running = True
-        thread = Thread(target = SoarAgent.__run_thread, args = (self, ))
+        thread = Thread(target = SoarAgent._run_thread, args = (self, ))
         thread.start()
 
     def stop(self):
@@ -147,7 +149,7 @@ class SoarAgent:
     def execute_command(self, cmd):
         """ Execute a soar command, write output to print_handler """
         self.print_handler(cmd)
-        self.print_handler(self.agent.ExecuteCommandLine(cmd)  + "\n")
+        self.print_handler(self.agent.ExecuteCommandLine(cmd).strip())
 
     def connect(self):
         """ Register event handlers for agent and connectors """
@@ -155,14 +157,14 @@ class SoarAgent:
             return
 
         self.run_event_callback_id = self.agent.RegisterForRunEvent(
-            sml.smlEVENT_BEFORE_INPUT_PHASE, SoarAgent.__run_event_handler, self)
+            sml.smlEVENT_BEFORE_INPUT_PHASE, SoarAgent._run_event_handler, self)
 
         if self.enable_log or self.write_to_stdout:
             self.print_event_callback_id = self.agent.RegisterForPrintEvent(
-                    sml.smlEVENT_PRINT, SoarAgent.__print_event_handler, self)
+                    sml.smlEVENT_PRINT, SoarAgent._print_event_handler, self)
 
         self.init_agent_callback_id = self.kernel.RegisterForAgentEvent(
-                sml.smlEVENT_BEFORE_AGENT_REINITIALIZED, SoarAgent.__init_agent_handler, self)
+                sml.smlEVENT_BEFORE_AGENT_REINITIALIZED, SoarAgent._init_agent_handler, self)
 
         for connector in self.connectors.values():
             connector.connect()
@@ -193,31 +195,31 @@ class SoarAgent:
 
     def reset(self):
         """ Will destroy the current agent and create + source a new one """
-        self.__destroy_soar_agent()
-        self.__create_soar_agent()
+        self._destroy_soar_agent()
+        self._create_soar_agent()
         self.connect()
 
     def kill(self):
         """ Will destroy the current agent + kernel, cleans up everything """
-        self.__destroy_soar_agent()
+        self._destroy_soar_agent()
         self.kernel.Shutdown()
 
 
 #### Internal Methods
 
-    def __run_thread(self):
+    def _run_thread(self):
         self.agent.ExecuteCommandLine("run")
         self.is_running = False
 
-    def __create_soar_agent(self):
+    def _create_soar_agent(self):
         self.agent = self.kernel.CreateAgent(self.agent_name)
         if self.spawn_debugger:
             success = self.agent.SpawnDebugger(self.kernel.GetListenerPort())
 
-        self.__source_agent()
+        self._source_agent()
         self.agent.ExecuteCommandLine("w " + str(self.watch_level))
 
-    def __source_agent(self):
+    def _source_agent(self):
         self.agent.ExecuteCommandLine("smem --set database memory")
         self.agent.ExecuteCommandLine("epmem --set database memory")
 
@@ -235,20 +237,18 @@ class SoarAgent:
         else:
             self.print_handler("agent_source not specified, no rules are being sourced")
 
-    def __on_init_soar(self):
+    def _on_init_soar(self):
         for connector in self.connectors.values():
             connector.on_init_soar()
-        self.seconds.remove_from_wm()
-        self.steps.remove_from_wm()
-        if self.time_id:
-            self.time_id.DestroyWME()
-            self.time_id = None
 
-    def __destroy_soar_agent(self):
+        self.time_info.remove_from_wm()
+        self.time_info.reset_time()
+
+    def _destroy_soar_agent(self):
         self.stop()
         while self.is_running:
-            time.sleep(0.01)
-        self.__on_init_soar()
+            sleep(0.01)
+        self._on_init_soar()
         self.disconnect()
         if self.spawn_debugger:
             self.agent.KillDebugger()
@@ -256,59 +256,48 @@ class SoarAgent:
         self.agent = None
 
     @staticmethod
-    def __init_agent_handler(eventID, self, info):
+    def _init_agent_handler(eventID, self, info):
         try:
-            self.__on_init_soar()
+            self._on_init_soar()
         except:
             self.print_handler("ERROR IN INIT AGENT")
+            self.print_handler(traceback.format_exc())
 
     @staticmethod
-    def __run_event_handler(eventID, self, agent, phase):
+    def _run_event_handler(eventID, self, agent, phase):
         if eventID == sml.smlEVENT_BEFORE_INPUT_PHASE:
-            self.__on_input_phase()
+            self._on_input_phase(agent.GetInputLink())
 
 
-    def __on_input_phase(self):
+    def _on_input_phase(self, input_link):
        try:
             if self.queue_stop:
                 self.agent.StopSelf()
                 self.queue_stop = False
 
-            # Timing Info
-            if self.time_id == None:
-                self.start_time = current_time_ms()
-                self.time_id = self.agent.GetInputLink().CreateIdWME("time")
-                self.seconds.set_value(0)
-                self.seconds.add_to_wm(self.time_id)
-                self.steps.set_value(0)
-                self.steps.add_to_wm(self.time_id)
-            else:
-                self.seconds.set_value(int((current_time_ms() - self.start_time)/1000))
-                self.seconds.update_wm()
-                self.steps.set_value(self.steps.val + 1)
-                self.steps.update_wm()
+            self.time_info.tick(5)
+            self.time_info.update_wm(input_link)
 
             for connector in self.connectors.values():
-                connector.on_input_phase(self.agent.GetInputLink())
+                connector.on_input_phase(input_link)
 
             if self.agent.IsCommitRequired():
                 self.agent.Commit()
        except:
-           e = sys.exc_info()
            self.print_handler("ERROR IN RUN HANDLER")
-           self.print_handler(str(e[0]))
-           self.print_handler(str(e[1]))
-           self.print_handler(str(e[2]))
+           self.print_handler(traceback.format_exc())
 
 
     @staticmethod
-    def __print_event_handler(eventID, self, agent, message):
+    def _print_event_handler(eventID, self, agent, message):
         try:
             if self.write_to_stdout:
+                message = message.strip()
                 self.print_handler(message)
             if self.enable_log:
                 self.log_writer.write(message)
         except:
             self.print_handler("ERROR IN PRINT HANDLER")
+            self.print_handler(traceback.format_exc())
 
 

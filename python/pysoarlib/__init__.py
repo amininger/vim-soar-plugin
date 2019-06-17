@@ -3,6 +3,7 @@
 Depends on the Python_sml_ClientInterface, so make sure that SOAR_HOME is on the PYTHONPATH
 
 SoarAgent and AgentConnector are used to create an agent
+WMInterface is a standardized interface for adding/removing structures from working memory
 SoarWME is a wrapper for creating working memory elements
 SVSCommands will generate svs command strings for some common use cases
 
@@ -13,7 +14,7 @@ Note that LanguageConnector is used in Rosie and not all that useful for general
 """
 import Python_sml_ClientInterface as sml
 
-__all__ = ["SoarWME", "SVSCommands", "AgentConnector", "LanguageConnector", "SoarAgent"]
+__all__ = ["WMInterface", "SoarWME", "SoarUtils", "SVSCommands", "AgentConnector", "LanguageConnector", "SoarAgent"]
 
 # Extend the sml Identifier class definition with additional utility methods
 from .IdentifierExtensions import *
@@ -24,9 +25,13 @@ sml.Identifier.GetChildId = get_child_id
 sml.Identifier.GetAllChildIds = get_all_child_ids
 sml.Identifier.GetAllChildValues = get_all_child_values
 
+
+from .WMInterface import WMInterface
 from .SoarWME import SoarWME
 from .SVSCommands import SVSCommands
 from .AgentConnector import AgentConnector
 from .LanguageConnector import LanguageConnector
 from .SoarAgent import SoarAgent
+from .SoarUtils import SoarUtils
+
 

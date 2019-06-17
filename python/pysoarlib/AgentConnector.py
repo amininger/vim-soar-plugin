@@ -5,6 +5,8 @@ A Connector can be added to a SoarAgent and can handle input/output
 """
 
 from __future__ import print_function
+ 
+import traceback, sys
 
 class AgentConnector(object):
     """ Base Class for handling input/output for a soar agent
@@ -36,7 +38,7 @@ class AgentConnector(object):
         """ Will cause the connector to handle commands with the given name on the output-link """
         if self.connected:
             self.output_handler_ids[command_name] = self.agent.agent.AddOutputHandler(
-                    command_name, AgentConnector.__output_event_handler, self)
+                    command_name, AgentConnector._output_event_handler, self)
         else:
             self.output_handler_ids[command_name] = -1
 
@@ -47,7 +49,7 @@ class AgentConnector(object):
 
         for command_name in self.output_handler_ids:
             self.output_handler_ids[command_name] = self.agent.agent.AddOutputHandler(
-                    command_name, AgentConnector.__output_event_handler, self)
+                    command_name, AgentConnector._output_event_handler, self)
 
         self.connected = True
 
@@ -78,7 +80,7 @@ class AgentConnector(object):
         pass
 
     @staticmethod
-    def __output_event_handler(self, agent_name, att_name, wme):
+    def _output_event_handler(self, agent_name, att_name, wme):
         """ OutputHandler callback for when a command is put on the output link """
         try:
             if wme.IsJustAdded() and wme.IsIdentifier():
@@ -86,6 +88,5 @@ class AgentConnector(object):
                 self.on_output_event(att_name, root_id)
         except:
             self.print_handler("ERROR IN OUTPUT EVENT HANDLER")
-            self.print_handler(sys.exec_info())
-
-        self.connected = True
+            self.print_handler(traceback.format_exc())
+            self.print_handler("--------- END ---------------")

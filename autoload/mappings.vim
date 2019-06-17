@@ -5,7 +5,7 @@ command! -nargs=0 CloseDebugger :Python close_debugger()
 command! -nargs=0 ResetDebugger :Python reset_debugger()
 
 " Source the current file into the running soar agent (debugger.vim)
-command! -nargs=0 SourceCurrentFile :call ExecuteSoarCommand("source ".expand('%:p'))
+command! -nargs=0 SourceFile :call ExecuteSoarCommand("source ".expand('%:p'))
 
 " Source a specified file into the running soar agent (debugger.vim)
 command! -nargs=1 -complete=file SourceSoarFile :call SourceSoarFile(<f-args>)
@@ -51,32 +51,32 @@ nnoremap ;re :Python agent.execute_command("run 1 -e")<CR>
 nnoremap ;ma :Python agent.execute_command("matches")<CR>
 
 " source production
-nnoremap ;sp :call ExecuteSoarCommand(GetCurrentSoarRuleBody())<CR>
+nnoremap ;sp :call ExecuteSoarCommand(GetSoarProductionBody())<CR>
 " matches production
-nnoremap ;mp :call ExecuteSoarCommand("matches ".GetCurrentSoarRuleName())<CR>
+nnoremap ;mp :call ExecuteSoarCommand("matches ".GetSoarProductionName())<CR>
 " excise production
-nnoremap ;ep :call ExecuteSoarCommand("excise ".GetCurrentSoarRuleName())<CR>
+nnoremap ;ep :call ExecuteSoarCommand("excise ".GetSoarProductionName())<CR>
 " firing count of production
-nnoremap ;fcp :call ExecuteSoarCommand("fc ".GetCurrentSoarRuleName())<CR>
+nnoremap ;fcp :call ExecuteSoarCommand("fc ".GetSoarProductionName())<CR>
 
 " print rule by name
-nnoremap ;pr :call ExecuteSoarCommand("p ".GetCurrentSoarWord())<CR>
+nnoremap ;pr :call ExecuteSoarCommand("p ".GetSoarWord())<CR>
 " matches rule name
-nnoremap ;mr :call ExecuteSoarCommand("matches ".GetCurrentSoarWord())<CR>
+nnoremap ;mr :call ExecuteSoarCommand("matches ".GetSoarWord())<CR>
 " excise rule name
-nnoremap ;er :call ExecuteSoarCommand("excise ".GetCurrentSoarWord())<CR>
+nnoremap ;er :call ExecuteSoarCommand("excise ".GetSoarWord())<CR>
 " firing count of rule name
-nnoremap ;fcr :call ExecuteSoarCommand("fc ".GetCurrentSoarWord())<CR>
+nnoremap ;fcr :call ExecuteSoarCommand("fc ".GetSoarWord())<CR>
 
 
 " print wmes
-nnoremap ;p1 :<C-U>call ExecuteSoarCommand("p ".GetCurrentSoarWord())<CR>
-nnoremap ;p2 :<C-U>call ExecuteSoarCommand("p ".GetCurrentSoarWord()." -d 2")<CR>
-nnoremap ;p3 :<C-U>call ExecuteSoarCommand("p ".GetCurrentSoarWord()." -d 3")<CR>
-nnoremap ;p4 :<C-U>call ExecuteSoarCommand("p ".GetCurrentSoarWord()." -d 4")<CR>
-nnoremap ;p5 :<C-U>call ExecuteSoarCommand("p ".GetCurrentSoarWord()." -d 5")<CR>
-nnoremap ;p6 :<C-U>call ExecuteSoarCommand("p ".GetCurrentSoarWord()." -d 6")<CR>
-nnoremap ;p7 :<C-U>call ExecuteSoarCommand("p ".GetCurrentSoarWord()." -d 7")<CR>
-nnoremap ;p8 :<C-U>call ExecuteSoarCommand("p ".GetCurrentSoarWord()." -d 8")<CR>
-nnoremap ;p9 :<C-U>call ExecuteSoarCommand("p ".GetCurrentSoarWord()." -d 9")<CR>
+nnoremap ;p1 :<C-U>call ExecuteSoarCommand("p ".GetSoarWord())<CR>
+nnoremap ;p2 :<C-U>call ExecuteSoarCommand("p ".GetSoarWord()." -d 2")<CR>
+nnoremap ;p3 :<C-U>call ExecuteSoarCommand("p ".GetSoarWord()." -d 3")<CR>
+nnoremap ;p4 :<C-U>call ExecuteSoarCommand("p ".GetSoarWord()." -d 4")<CR>
+nnoremap ;p5 :<C-U>call ExecuteSoarCommand("p ".GetSoarWord()." -d 5")<CR>
+nnoremap ;p6 :<C-U>call ExecuteSoarCommand("p ".GetSoarWord()." -d 6")<CR>
+nnoremap ;p7 :<C-U>call ExecuteSoarCommand("p ".GetSoarWord()." -d 7")<CR>
+nnoremap ;p8 :<C-U>call ExecuteSoarCommand("p ".GetSoarWord()." -d 8")<CR>
+nnoremap ;p9 :<C-U>call ExecuteSoarCommand("p ".GetSoarWord()." -d 9")<CR>
 

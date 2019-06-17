@@ -1,31 +1,34 @@
 """"""""""""""""""" SOAR FUNCTIONS """""""""""""""""""
-let g:COMMENTED_SOAR_RULE = 1
-let g:UNCOMMENTED_SOAR_RULE = 0
 
-function! GetSoarRuleInfo(start_line_num, commented)
-	" Gets information about the soar rule at the given line number
-	"   (start_line_num can be anywhere inside the rule)
-	" commented is either g:COMMENTED_SOAR_RULE or g:UNCOMMENTED_SOAR_RULE
-	"   and determines if it is looking for #'s in front of the rule
-	" returns a 3-index array if inside a rule (empty array otherwise)
-	" rule_info[0] = rule start line number
-	" rule_info[1] = rule end line number
-	" rule_info[2] = rule name
-	let rule_info = [ -1, -1, "" ] 
+
+" GetSoarProductionInfo(line_num, commented)
+"	Gets information about the soar production at the given line number
+" 	  (line_num can be anywhere inside the production)
+" 	  If no line_num is given, uses the current cursor position
+" 	if commented is given and equals 1, this will look for #'s in front
+"
+" 	returns a 3-index array if inside a production (empty array otherwise)
+" 	  prod_info[0] = production start line number
+" 	  prod_info[1] = production end line number
+" 	  prod_info[2] = production name
+function! GetSoarProductionInfo(...)
+	let line_num = a:0 > 0 ? a:1 : line('.')
+	let commented = a:0 > 1 ? a:2 : 0
+	let prod_info = [ -1, -1, "" ] 
 
 	" Search backward until we find a line starting with sp {
-	let cur_line_num = a:start_line_num
+	let cur_line_num = line_num
 	while cur_line_num >= 0
 		let cur_line = getline(cur_line_num)
 		let words = split(cur_line)
-		if len(words) > 1 && words[0] == (a:commented ? "#sp" : "sp") && words[1][0] == '{'
-			let rule_info[0] = cur_line_num
-			let rule_info[2] = strpart(words[1], 1)
+		if len(words) > 1 && words[0] == (commented ? "#sp" : "sp") && words[1][0] == '{'
+			let prod_info[0] = cur_line_num
+			let prod_info[2] = strpart(words[1], 1)
 			break
 		endif
 		let cur_line_num = cur_line_num - 1
 	endwhile
-	if rule_info[0] == -1
+	if prod_info[0] == -1
 		return []
 	endif
 
@@ -34,7 +37,7 @@ function! GetSoarRuleInfo(start_line_num, commented)
 	let open_brace_count = 1
 	let close_brace_count = 0
 
-	let cur_line_num = rule_info[0] + 1
+	let cur_line_num = prod_info[0] + 1
 	while cur_line_num <= last_line_num
 		let cur_line = getline(cur_line_num)
 		" Count number of open braces
@@ -54,46 +57,53 @@ function! GetSoarRuleInfo(start_line_num, commented)
 		endif
 
 		if open_brace_count == close_brace_count
-			let rule_info[1] = cur_line_num
+			let prod_info[1] = cur_line_num
 			break
 		endif
 		let cur_line_num = cur_line_num + 1
 	endwhile
-	if rule_info[1] == -1 || rule_info[1] < a:start_line_num
+	if prod_info[1] == -1 || prod_info[1] < line_num
 		return []
 	endif
 
-	return rule_info
+	return prod_info
 endfunction
 
-function! GetSoarRuleBody(line_num)
-	let rule_info = GetSoarRuleInfo(a:line_num, g:UNCOMMENTED_SOAR_RULE)
-	return len(rule_info) >= 2 ? join(getline(rule_info[0], rule_info[1]), "\n")."\n" : ""
+" GetSoarProductionBody(line_num)
+"   Returns the production containing the given line number 
+"     as a single string (with newlines)
+"   If no line_num is given, it uses the current cursor position
+function! GetSoarProductionBody(...)
+	let line_num = a:0 > 0 ? a:1 : line('.')
+	let prod_info = GetSoarProductionInfo(line_num)
+	return len(prod_info) >= 2 ? join(getline(prod_info[0], prod_info[1]), "\n")."\n" : ""
 endfunction
 
-function! GetCurrentSoarRuleBody()
-	return GetSoarRuleBody(line('.'))
+" GetSoarProductionName(line_num)
+"   Returns the name of the production containing the given line
+"   (can be anywhere inside the production)
+"   If no line_num is given, it uses the current cursor position
+function! GetSoarProductionName(...)
+	let line_num = a:0 > 0 ? a:1 : line('.')
+	let prod_info = GetSoarProductionInfo(line_num)
+	return len(prod_info) > 2 ? prod_info[2] : ""
 endfunction
 
-function! GetSoarRuleName(line_num)
-	let rule_info = GetSoarRuleInfo(a:line_num, g:UNCOMMENTED_SOAR_RULE)
-	return len(rule_info) > 2 ? rule_info[2] : ""
-endfunction
+" GetSoarWord(row, col)
+"   Will return the word at the given row/col
+"     where a word is considered contiguous alpha-numeric characters, 
+"     plus underscore, hyphen, and asterisk
+"   If no row/column is given, it uses the current cursor position
+function! GetSoarWord(...)
+	let row = a:0 > 0 ? a:1 : line('.')
+	let col = a:0 > 1 ? a:2 : col('.')
 
-function! GetCurrentSoarRuleName()
-	return GetSoarRuleName(line('.'))
-endfunction
-
-" Will return the word at the given row/col
-"   where a word is considered contiguous alpha-numeric characters, 
-"   plus underscore, hyphen, and asterisk
-function! GetSoarWord(row, col)
 	let valid_char = "[a-zA-Z0-9*_-]"
-	let cur_line = getline(a:row)
+	let cur_line = getline(row)
 
 	" Seek forward on the line until hitting an invalid character
 	" (or end of line)
-	let end_col = a:col - 1
+	let end_col = col - 1
 	let hit_valid = 0
 	while end_col <= len(cur_line)
 		if match(cur_line[end_col], valid_char) == 0
@@ -124,9 +134,5 @@ function! GetSoarWord(row, col)
 	let start_col += 1
 
 	return strpart(cur_line, start_col, (end_col - start_col))
-endfunction
-
-function! GetCurrentSoarWord()
-	return GetSoarWord(line('.'), col('.'))
 endfunction
 

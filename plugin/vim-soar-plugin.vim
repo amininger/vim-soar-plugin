@@ -15,7 +15,7 @@ exec "source ".g:vim_soar_plugin_root_dir."/plugin/templates.vim"
 
 " Looks for <dir>_source.soar in the same directory
 " and appends a line sourcing the current soar file
-command! -nargs=0 AddFileToSource :call AddFileToSoarSource()
+command! -nargs=0 AddFileToSoarSource :call AddFileToSoarSource()
 
 " Adds a source subdirectory command to the current file (pushd/source/popd)
 " will autocomplete using current directories.

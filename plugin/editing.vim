@@ -18,50 +18,41 @@ function! SourceSoarDirectory(soar_dir)
 	call append(line('.'), [ 'pushd '.trimmed_dir, 'source '.trimmed_dir.'_source.soar', 'popd' ])
 endfunction
 
-" Deletes the production at the given line number
-function! DeleteSoarRule(line_num)
-	let rule_info = GetSoarRuleInfo(a:line_num, g:UNCOMMENTED_SOAR_RULE)
-    if len(rule_info) > 2
-        execute ":".rule_info[0].",".rule_info[1]."d"
+
+""""""""""""""""" DELETING """""""""""""""""""""
+
+" DeleteSoarProduction(line_num)
+"   Deletes the production at the given line number
+"   (or cursor position if no line_num is given)
+function! DeleteSoarProduction(...)
+	let line_num = a:0 > 0 ? a:1 : line('.')
+	let prod_info = GetSoarProductionInfo(line_num)
+    if len(prod_info) > 2
+        execute ":".prod_info[0].",".prod_info[1]."d"
     endif
 endfunction
 
-" Deletes the production at the current cursor position
-function! DeleteCurrentSoarRule()
-	let rule_info = GetSoarRuleInfo(line('.'), g:UNCOMMENTED_SOAR_RULE)
-    if len(rule_info) > 2
-        execute ":".rule_info[0].",".rule_info[1]."d"
-    endif
-endfunction
+""""""""""""""""" COMMENTING """""""""""""""""""""
 
-" Comments the production at the given line number (prepend with #)
-function! CommentCurrentSoarRule(line_num)
-	let rule_info = GetSoarRuleInfo(a:line_num, g:UNCOMMENTED_SOAR_RULE)
-	if len(rule_info) > 2
-		execute ":".rule_info[0].",".rule_info[1]."s/^/#/"
+" CommentSoarProduction(line_num)
+"   Comments the production at the given line number (prepend with #)
+"   (or cursor position if no line_num is given)
+function! CommentSoarProduction(...)
+	let line_num = a:0 > 0 ? a:1 : line('.')
+	let prod_info = GetSoarProductionInfo(line_num)
+	if len(prod_info) > 2
+		execute ":".prod_info[0].",".prod_info[1]."s/^/#/"
 	endif
 endfunction
 
-" Comments the production at the current cursor position (prepend with #)
-function! CommentCurrentSoarRule()
-	let rule_info = GetSoarRuleInfo(line('.'), g:UNCOMMENTED_SOAR_RULE)
-	if len(rule_info) > 2
-		execute ":".rule_info[0].",".rule_info[1]."s/^/#/"
+" UncommentSoarProduction(line_num)
+"   Uncomments the production at the given line number (removes prefix #)
+"   (or cursor position if no line_num is given)
+function! UncommentSoarProduction(...)
+	let line_num = a:0 > 0 ? a:1 : line('.')
+	let prod_info = GetSoarProductionInfo(line_num, 1)
+	if len(prod_info) > 2
+		execute ":".prod_info[0].",".prod_info[1]."s/^#//"
 	endif
 endfunction
 
-" Uncomments the production at the given line number (removes prefix #'s)
-function! UncommentSoarRule(line_num)
-	let rule_info = GetSoarRuleInfo(a:line_num, g:COMMENTED_SOAR_RULE)
-	if len(rule_info) > 2
-		execute ":".rule_info[0].",".rule_info[1]."s/^#//"
-	endif
-endfunction
-
-" Uncomments the production at the current cursor position (removes prefix #'s)
-function! UncommentCurrentSoarRule()
-	let rule_info = GetSoarRuleInfo(line('.'), g:COMMENTED_SOAR_RULE)
-	if len(rule_info) > 2
-		execute ":".rule_info[0].",".rule_info[1]."s/^#//"
-	endif
-endfunction

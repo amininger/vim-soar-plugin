@@ -60,23 +60,23 @@ nnoremap ;ep :call ExecuteSoarCommand("excise ".GetCurrentSoarRuleName())<CR>
 nnoremap ;fcp :call ExecuteSoarCommand("fc ".GetCurrentSoarRuleName())<CR>
 
 " print rule by name
-nnoremap ;pr :call ExecuteSoarCommand("p ".GetStrippedCurrentWord())<CR>
+nnoremap ;pr :call ExecuteSoarCommand("p ".GetCurrentSoarWord())<CR>
 " matches rule name
-nnoremap ;mr :call ExecuteSoarCommand("matches ".GetStrippedCurrentWord())<CR>
+nnoremap ;mr :call ExecuteSoarCommand("matches ".GetCurrentSoarWord())<CR>
 " excise rule name
-nnoremap ;er :call ExecuteSoarCommand("excise ".GetStrippedCurrentWord())<CR>
+nnoremap ;er :call ExecuteSoarCommand("excise ".GetCurrentSoarWord())<CR>
 " firing count of rule name
-nnoremap ;fcr :call ExecuteSoarCommand("fc ".GetStrippedCurrentWord())<CR>
+nnoremap ;fcr :call ExecuteSoarCommand("fc ".GetCurrentSoarWord())<CR>
 
 
 " print wmes
-nnoremap ;p1 :<C-U>call ExecuteSoarCommand("p ".GetStrippedCurrentWord())<CR>
-nnoremap ;p2 :<C-U>call ExecuteSoarCommand("p ".GetStrippedCurrentWord()." -d 2")<CR>
-nnoremap ;p3 :<C-U>call ExecuteSoarCommand("p ".GetStrippedCurrentWord()." -d 3")<CR>
-nnoremap ;p4 :<C-U>call ExecuteSoarCommand("p ".GetStrippedCurrentWord()." -d 4")<CR>
-nnoremap ;p5 :<C-U>call ExecuteSoarCommand("p ".GetStrippedCurrentWord()." -d 5")<CR>
-nnoremap ;p6 :<C-U>call ExecuteSoarCommand("p ".GetStrippedCurrentWord()." -d 6")<CR>
-nnoremap ;p7 :<C-U>call ExecuteSoarCommand("p ".GetStrippedCurrentWord()." -d 7")<CR>
-nnoremap ;p8 :<C-U>call ExecuteSoarCommand("p ".GetStrippedCurrentWord()." -d 8")<CR>
-nnoremap ;p9 :<C-U>call ExecuteSoarCommand("p ".GetStrippedCurrentWord()." -d 9")<CR>
+nnoremap ;p1 :<C-U>call ExecuteSoarCommand("p ".GetCurrentSoarWord())<CR>
+nnoremap ;p2 :<C-U>call ExecuteSoarCommand("p ".GetCurrentSoarWord()." -d 2")<CR>
+nnoremap ;p3 :<C-U>call ExecuteSoarCommand("p ".GetCurrentSoarWord()." -d 3")<CR>
+nnoremap ;p4 :<C-U>call ExecuteSoarCommand("p ".GetCurrentSoarWord()." -d 4")<CR>
+nnoremap ;p5 :<C-U>call ExecuteSoarCommand("p ".GetCurrentSoarWord()." -d 5")<CR>
+nnoremap ;p6 :<C-U>call ExecuteSoarCommand("p ".GetCurrentSoarWord()." -d 6")<CR>
+nnoremap ;p7 :<C-U>call ExecuteSoarCommand("p ".GetCurrentSoarWord()." -d 7")<CR>
+nnoremap ;p8 :<C-U>call ExecuteSoarCommand("p ".GetCurrentSoarWord()." -d 8")<CR>
+nnoremap ;p9 :<C-U>call ExecuteSoarCommand("p ".GetCurrentSoarWord()." -d 9")<CR>
 

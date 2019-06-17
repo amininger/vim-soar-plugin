@@ -28,6 +28,7 @@ exec "source ".g:vim_soar_plugin_root_dir."/autoload/rosie.vim"
 " Contains custom commands and key mappings
 exec "source ".g:vim_soar_plugin_root_dir."/autoload/mappings.vim"
 
+
 function! vim_soar_plugin#OpenSoarDebugger(...)
 	let config_file = ""
 	if a:0 == 1
@@ -65,7 +66,7 @@ function! vim_soar_plugin#OpenRosieThorDebugger()
 endfunction
 
 function! vim_soar_plugin#OpenRosieCozmoDebugger()
-	let agent_name = input('Enter agent name: ', 'cozmo')
+	let agent_name = input('Enter agent name: ', 'cozmo-kitchen')
 	let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
 	call SetupDebuggerPanes()
 	call SetupAgentMethods()

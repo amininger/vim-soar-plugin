@@ -1,19 +1,24 @@
 """"""""""""""""""" SOAR FUNCTIONS """""""""""""""""""
+let g:COMMENTED_SOAR_RULE = 1
+let g:UNCOMMENTED_SOAR_RULE = 0
 
-function! GetSoarRuleInfo(start_line_num)
+function! GetSoarRuleInfo(start_line_num, commented)
+	" Gets information about the soar rule at the given line number
+	"   (start_line_num can be anywhere inside the rule)
+	" commented is either g:COMMENTED_SOAR_RULE or g:UNCOMMENTED_SOAR_RULE
+	"   and determines if it is looking for #'s in front of the rule
 	" returns a 3-index array if inside a rule (empty array otherwise)
 	" rule_info[0] = rule start line number
 	" rule_info[1] = rule end line number
 	" rule_info[2] = rule name
 	let rule_info = [ -1, -1, "" ] 
 
-
 	" Search backward until we find a line starting with sp {
 	let cur_line_num = a:start_line_num
 	while cur_line_num >= 0
 		let cur_line = getline(cur_line_num)
 		let words = split(cur_line)
-		if len(words) > 1 && words[0] == "sp" && words[1][0] == '{'
+		if len(words) > 1 && words[0] == (a:commented ? "#sp" : "sp") && words[1][0] == '{'
 			let rule_info[0] = cur_line_num
 			let rule_info[2] = strpart(words[1], 1)
 			break
@@ -62,7 +67,7 @@ function! GetSoarRuleInfo(start_line_num)
 endfunction
 
 function! GetSoarRuleBody(line_num)
-	let rule_info = GetSoarRuleInfo(a:line_num)
+	let rule_info = GetSoarRuleInfo(a:line_num, g:UNCOMMENTED_SOAR_RULE)
 	return len(rule_info) >= 2 ? join(getline(rule_info[0], rule_info[1]), "\n")."\n" : ""
 endfunction
 
@@ -71,7 +76,7 @@ function! GetCurrentSoarRuleBody()
 endfunction
 
 function! GetSoarRuleName(line_num)
-	let rule_info = GetSoarRuleInfo(a:line_num)
+	let rule_info = GetSoarRuleInfo(a:line_num, g:UNCOMMENTED_SOAR_RULE)
 	return len(rule_info) > 2 ? rule_info[2] : ""
 endfunction
 
@@ -79,21 +84,10 @@ function! GetCurrentSoarRuleName()
 	return GetSoarRuleName(line('.'))
 endfunction
 
-function! DeleteSoarRule(line_num)
-	let rule_info = GetSoarRuleInfo(a:line_num)
-    if len(rule_info) > 2
-        execute ":".rule_info[0].",".rule_info[1]."d"
-    endif
-endfunction
-
-function! DeleteCurrentSoarRule()
-	let rule_info = GetSoarRuleInfo(line('.'))
-    if len(rule_info) > 2
-        execute ":".rule_info[0].",".rule_info[1]."d"
-    endif
-endfunction
-
-function! GetStrippedWord(row, col)
+" Will return the word at the given row/col
+"   where a word is considered contiguous alpha-numeric characters, 
+"   plus underscore, hyphen, and asterisk
+function! GetSoarWord(row, col)
 	let valid_char = "[a-zA-Z0-9*_-]"
 	let cur_line = getline(a:row)
 
@@ -132,6 +126,7 @@ function! GetStrippedWord(row, col)
 	return strpart(cur_line, start_col, (end_col - start_col))
 endfunction
 
-function! GetStrippedCurrentWord()
-	return GetStrippedWord(line('.'), col('.'))
+function! GetCurrentSoarWord()
+	return GetSoarWord(line('.'), col('.'))
 endfunction
+

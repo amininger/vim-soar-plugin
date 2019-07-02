@@ -35,7 +35,8 @@ function! OpenSoarProductionInNewTab(rule_name, root_dir)
 			let filename = parts[0]
 			let line_num = parts[1]
 			if filename =~ ".soar$"
-				execute "tabe +".line_num." ".filename
+				let rel_filename = fnamemodify(filename, ":~:.")
+				execute "tabe +".line_num." ".rel_filename
 			endif
 		endif
 	endfor

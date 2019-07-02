@@ -64,6 +64,11 @@ EDITING COMMANDS AND FEATURES
 
 Even if you don't run the debugger, this plugin offers useful features for editing .soar files
 
+""" EDITING
+;or | Open the soar file defining the current rule name in a new tab [cursor is on rule name]
+;op | Open the soar file defining the current production in a new tab [cursor is inside production]
+Note: These look in the directory $ROSIE_HOME/agent
+
 """ COPYING
 ;yp | Yank (to buffer) the current production [cursor is inside production]
 ;yr | Yank (to buffer) the current rule name [cursor is on rule name]
@@ -185,6 +190,10 @@ U      | Run 10 decision cycles
 """ PRINTING
 ;pr | Prints the full production [cursor is on rule name]
 ;p# | Print the current identifier to # depth (;p2 ;p4 ...) [cursor is on identifier]
+
+""" EDITING
+;or | Open the soar file defining the current rule name in a new tab [cursor is on rule name]
+;op | Open the soar file defining the current production in a new tab [cursor is inside production]
 
 """ COPYING
 ;yp | Yank (to buffer) the current production [cursor is inside production]

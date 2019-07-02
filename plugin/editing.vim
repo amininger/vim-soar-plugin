@@ -19,6 +19,29 @@ function! SourceSoarDirectory(soar_dir)
 endfunction
 
 
+""""""""""""""""" OPENING FILES """""""""""""""""""""
+
+" OpenSoarProductionInNewTab(prod_name, root_dir)
+" Will look for all files under the given root_dir
+"   that define the production with the given name (sp {prod_name )
+" And open each one as in a new tab
+function! OpenSoarProductionInNewTab(rule_name, root_dir)
+	" Note: we substitute * with . in the rule_name for grep to work properly
+	let command = "grep -nR \"sp {".substitute(a:rule_name, "*", ".", "g")." *$\" ".a:root_dir
+	let lines = split(system(command), "\n")
+	for line in lines
+		let parts = split(line, ":")
+		if len(parts) >= 2
+			let filename = parts[0]
+			let line_num = parts[1]
+			if filename =~ ".soar$"
+				execute "tabe +".line_num." ".filename
+			endif
+		endif
+	endfor
+endfunction
+
+
 """"""""""""""""" DELETING """""""""""""""""""""
 
 " DeleteSoarProduction(line_num)
@@ -55,4 +78,5 @@ function! UncommentSoarProduction(...)
 		execute ":".prod_info[0].",".prod_info[1]."s/^#//"
 	endif
 endfunction
+
 

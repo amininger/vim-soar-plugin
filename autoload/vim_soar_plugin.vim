@@ -43,7 +43,7 @@ function! vim_soar_plugin#OpenSoarDebugger(...)
 endfunction
 
 function! vim_soar_plugin#OpenRosieDebugger()
-	let agent_name = input('Enter agent name: ', 'test-task-learning')
+	let agent_name = input('Enter agent name: ', g:default_rosie_agent)
 	let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
 	call SetupDebuggerPanes()
 	call SetupAgentMethods()
@@ -54,7 +54,7 @@ function! vim_soar_plugin#OpenRosieDebugger()
 endfunction
 
 function! vim_soar_plugin#OpenRosieThorDebugger()
-	let agent_name = input('Enter agent name: ', 'test-task-learning')
+	let agent_name = input('Enter agent name: ', g:default_rosie_agent)
 	let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
 	call SetupDebuggerPanes()
 	call SetupAgentMethods()
@@ -66,7 +66,7 @@ function! vim_soar_plugin#OpenRosieThorDebugger()
 endfunction
 
 function! vim_soar_plugin#OpenRosieCozmoDebugger()
-	let agent_name = input('Enter agent name: ', 'cozmo-kitchen')
+	let agent_name = input('Enter agent name: ', g:default_rosie_agent)
 	let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
 	call SetupDebuggerPanes()
 	call SetupAgentMethods()

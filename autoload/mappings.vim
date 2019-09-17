@@ -70,13 +70,13 @@ nnoremap ;fcr :call ExecuteSoarCommand("fc ".GetSoarWord())<CR>
 
 
 " print wmes
-nnoremap ;p1 :<C-U>call ExecuteSoarCommand("p ".GetSoarWord())<CR>
-nnoremap ;p2 :<C-U>call ExecuteSoarCommand("p ".GetSoarWord()." -d 2")<CR>
-nnoremap ;p3 :<C-U>call ExecuteSoarCommand("p ".GetSoarWord()." -d 3")<CR>
-nnoremap ;p4 :<C-U>call ExecuteSoarCommand("p ".GetSoarWord()." -d 4")<CR>
-nnoremap ;p5 :<C-U>call ExecuteSoarCommand("p ".GetSoarWord()." -d 5")<CR>
-nnoremap ;p6 :<C-U>call ExecuteSoarCommand("p ".GetSoarWord()." -d 6")<CR>
-nnoremap ;p7 :<C-U>call ExecuteSoarCommand("p ".GetSoarWord()." -d 7")<CR>
-nnoremap ;p8 :<C-U>call ExecuteSoarCommand("p ".GetSoarWord()." -d 8")<CR>
-nnoremap ;p9 :<C-U>call ExecuteSoarCommand("p ".GetSoarWord()." -d 9")<CR>
+nnoremap ;p1 :call ExecuteSoarCommand("p ".GetSoarWord())<CR>
+nnoremap ;p2 :call ExecuteSoarCommand("p ".GetSoarWord()." -d 2")<CR>
+nnoremap ;p3 :call ExecuteSoarCommand("p ".GetSoarWord()." -d 3")<CR>
+nnoremap ;p4 :call ExecuteSoarCommand("p ".GetSoarWord()." -d 4")<CR>
+nnoremap ;p5 :call ExecuteSoarCommand("p ".GetSoarWord()." -d 5")<CR>
+nnoremap ;p6 :call ExecuteSoarCommand("p ".GetSoarWord()." -d 6")<CR>
+nnoremap ;p7 :call ExecuteSoarCommand("p ".GetSoarWord()." -d 7")<CR>
+nnoremap ;p8 :call ExecuteSoarCommand("p ".GetSoarWord()." -d 8")<CR>
+nnoremap ;p9 :call ExecuteSoarCommand("p ".GetSoarWord()." -d 9")<CR>
 

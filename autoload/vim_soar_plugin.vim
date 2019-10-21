@@ -53,6 +53,18 @@ function! vim_soar_plugin#OpenRosieDebugger()
 	Python agent.connect()
 endfunction
 
+function! vim_soar_plugin#OpenRosieMobileDebugger()
+	let agent_name = input('Enter agent name: ', g:default_rosie_agent)
+	let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
+	call SetupDebuggerPanes()
+	call SetupAgentMethods()
+	Python from VimRosieAgent import VimRosieAgent
+	Python simulator = None
+	Python agent = VimRosieAgent(writer, config_filename=vim.eval("config_file"))
+	call LaunchMobileSimRosie()
+	Python agent.connect()
+endfunction
+
 function! vim_soar_plugin#OpenRosieThorDebugger()
 	let agent_name = input('Enter agent name: ', g:default_rosie_agent)
 	let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"

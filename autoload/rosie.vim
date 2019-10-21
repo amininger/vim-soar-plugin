@@ -1,5 +1,20 @@
 """" Rosie Specific Functionality """"
 
+function! LaunchMobileSimRosie()
+Python << EOF
+
+from mobilesim.rosie import LCMConnector, MobileSimPerceptionConnector, MobileSimActuationConnector
+
+lcmConn = LCMConnector(agent)
+agent.connectors["lcm"] = lcmConn
+agent.connectors["perception"] = MobileSimPerceptionConnector(agent, lcmConn.lcm)
+agent.connectors["perception"].print_handler = lambda message: writer.write(message)
+agent.connectors["actuation"] = MobileSimActuationConnector(agent, lcmConn.lcm)
+agent.connectors["actuation"].print_handler = lambda message: writer.write(message)
+
+EOF
+endfunction
+
 function! LaunchAi2ThorSimulator()
 Python << EOF
 

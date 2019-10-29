@@ -50,7 +50,7 @@ Plugin 'file:///home/user/.vim/bundle/vim-soar-plugin'
 ===================================================
 PROJECT ORGANIZATION
 
-autoload  - Contains soar debugger specific code, only loaded when OpenDebugger command is executed
+autoload  - Contains soar debugger specific code, only loaded when SoarDebugger command is executed
 doc       - Contains help for using the debugger
 ftdetect  - Tells vim to recognize the .soar file extension
 ftplugin  - Sets .soar file specific commands, including editing key mappings
@@ -63,6 +63,11 @@ templates - Collection of soar templates that can be inserted through the Insert
 EDITING COMMANDS AND FEATURES
 
 Even if you don't run the debugger, this plugin offers useful features for editing .soar files
+
+""" EDITING
+;or | Open the soar file defining the current rule name in a new tab [cursor is on rule name]
+;op | Open the soar file defining the current production in a new tab [cursor is inside production]
+Note: These look in the directory $ROSIE_HOME/agent
 
 """ COPYING
 ;yp | Yank (to buffer) the current production [cursor is inside production]
@@ -124,7 +129,7 @@ GetSoarProductionInfo(line_num, commented)
 RUNNING THE EXAMPLE AGENT (Basic Tutorial)
 
 1. Open vim in the current (soar_plugin) directory
-2. Run the command :OpenDebugger example.config
+2. Run the command :SoarDebugger example.config
    This will open the debugger window layout and put the agent in a ready state
 3. Type # to bring up a soar prompt, then enter 'p s1' to print the top-state
 4. Type H. This should run 1 DC and do the init-agent operator
@@ -140,7 +145,7 @@ RUNNING THE EXAMPLE AGENT (Basic Tutorial)
 ==================================================
 DEBUGGER COMMANDS
 
-OpenDebugger <config-file>  # Launch the debugger
+SoarDebugger <config-file>  # Launch the debugger
 							# You can pass an optional <config-file> to use to initialize the agent (details below)
 ResetDebugger               # Complete destroys and restarts the agent from a clean state (discards learned rules)
 CloseDebugger               # Closes the debugger and deletes the agent
@@ -185,6 +190,10 @@ U      | Run 10 decision cycles
 """ PRINTING
 ;pr | Prints the full production [cursor is on rule name]
 ;p# | Print the current identifier to # depth (;p2 ;p4 ...) [cursor is on identifier]
+
+""" EDITING
+;or | Open the soar file defining the current rule name in a new tab [cursor is on rule name]
+;op | Open the soar file defining the current production in a new tab [cursor is inside production]
 
 """ COPYING
 ;yp | Yank (to buffer) the current production [cursor is inside production]

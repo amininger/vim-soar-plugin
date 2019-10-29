@@ -44,7 +44,11 @@ endfunction
 
 function! vim_soar_plugin#OpenRosieDebugger()
 	let agent_name = input('Enter agent name: ', g:default_rosie_agent)
-	let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
+	if agent_name =~ "config" 
+		let config_file = $ROSIE_HOME."/test-agents/".agent_name
+	else
+		let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
+	endif
 	call SetupDebuggerPanes()
 	call SetupAgentMethods()
 	Python from VimRosieAgent import VimRosieAgent
@@ -55,7 +59,11 @@ endfunction
 
 function! vim_soar_plugin#OpenRosieMobileDebugger()
 	let agent_name = input('Enter agent name: ', g:default_rosie_agent)
-	let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
+	if agent_name =~ "config" 
+		let config_file = $ROSIE_HOME."/test-agents/".agent_name
+	else
+		let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
+	endif
 	call SetupDebuggerPanes()
 	call SetupAgentMethods()
 	Python from VimRosieAgent import VimRosieAgent
@@ -67,7 +75,11 @@ endfunction
 
 function! vim_soar_plugin#OpenRosieThorDebugger()
 	let agent_name = input('Enter agent name: ', g:default_rosie_agent)
-	let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
+	if agent_name =~ "config" 
+		let config_file = $ROSIE_HOME."/test-agents/".agent_name
+	else
+		let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
+	endif
 	call SetupDebuggerPanes()
 	call SetupAgentMethods()
 	Python from VimRosieAgent import VimRosieAgent
@@ -79,7 +91,11 @@ endfunction
 
 function! vim_soar_plugin#OpenRosieCozmoDebugger()
 	let agent_name = input('Enter agent name: ', g:default_rosie_agent)
-	let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
+	if agent_name =~ "config" 
+		let config_file = $ROSIE_HOME."/test-agents/".agent_name
+	else
+		let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
+	endif
 	call SetupDebuggerPanes()
 	call SetupAgentMethods()
 	Python from VimRosieAgent import VimRosieAgent

@@ -40,18 +40,11 @@ def task_arg_to_string(arg_id):
     return "?"
 
 def obj_arg_to_string(obj_id):
-    pred_order = [ ["size"], ["color"], ["name", "shape", "category"] ]
+    root_cat = obj_id.GetChildString("root-category")
     preds_id = obj_id.GetChildId("predicates")
-    obj_desc = ""
-    for pred_list in pred_order:
-        for pred in pred_list:
-            pred_str = preds_id.GetChildString(pred)
-            if pred_str:
-                obj_desc += pred_str + " "
-                break
-    if len(obj_desc) > 0:
-        obj_desc = obj_desc[:-1]
-
+    pred_names = [ "size", "color", "name", "shape" ]
+    preds = [ preds_id.GetChildString(pred) for pred in pred_names ] + [ root_cat ]
+    obj_desc = " ".join( p for p in preds if p is not None )
     return obj_desc.translate(str.maketrans('', '', digits))
 
 class ActionStackConnector(AgentConnector):

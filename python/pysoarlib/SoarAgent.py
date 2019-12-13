@@ -155,6 +155,10 @@ class SoarAgent():
         """ Execute a soar command, write output to print_handler """
         self.print_handler(cmd)
         self.print_handler(self.agent.ExecuteCommandLine(cmd).strip())
+	
+	def get_command_result(self, cmd):
+		""" Execute a soar command, then result the result as a string """
+		return self.agent.ExecuteCommandLine(cmd)
 
     def connect(self):
         """ Register event handlers for agent and connectors """

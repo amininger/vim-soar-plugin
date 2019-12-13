@@ -88,6 +88,9 @@ def send_message(msg):
 	if len(msg.strip()) > 0:
 		writer.write("Instr: " + msg, VimWriter.SIDE_PANE_TOP, clear=False, scroll=True)
 		agent.connectors["language"].send_message(msg)
+
+def insert_text(txt):
+	vim.command('execute "normal! i' + txt + '\<Esc>"')
 EOF
 
 function! SendMessageToRosie()
@@ -122,3 +125,58 @@ function! ControlAi2ThorRobot()
 endfunction
 
 
+Python << EOF
+
+def parse_wmes(soar_output):
+	soar_output = soar_output.replace("\n", " ")
+	soar_output = soar_output.replace(")", "")
+	id_info = soar_output.split("(")
+	wmes = []
+	for idi in id_info:
+		tokens = idi.split()
+		if len(tokens) == 0:
+			continue
+		root_id = tokens[0]
+		i = 1
+		while i < len(tokens):
+			if tokens[i][0] != '^':
+				i += 1
+				continue
+			att = tokens[i][1:]
+			val = tokens[i+1]
+			i += 2
+			wmes.append( (root_id, att, val) )
+	return wmes
+
+def print_rosie_objects():
+	wmes = parse_wmes(agent.get_command_result("pobjs -d 3"))
+	object_strs = []
+	object_ids = [ wme[2] for wme in wmes if wme[1] == 'object' ]
+	for oid in object_ids:
+		root_cat = next(wme[2] for wme in wmes if wme[0] == oid and wme[1] == 'root-category')
+		pred_id  = next(wme[2] for wme in wmes if wme[0] == oid and wme[1] == 'predicates')
+		preds = [ wme[2] for wme in wmes if wme[0] == pred_id and wme[1] != 'category' and wme[1] != 'volume' ]
+		object_strs.append(root_cat + ' (' + oid + '): ' + ', '.join(preds))
+	result = '\n======= Rosie Objects =======\n' + '\n'.join(object_strs) + '\n'
+	insert_text(result)
+
+def print_rosie_preds():
+	wmes = parse_wmes(agent.get_command_result("ppreds -d 4"))
+	preds = []
+	pred_ids = [ wme[2] for wme in wmes if wme[1] == 'predicate' ]
+	for pid in pred_ids:
+		handle = next(wme[2] for wme in wmes if wme[0] == pid and wme[1] == 'handle')
+		instances = [ wme[2] for wme in wmes if wme[0] == pid and wme[1] == 'instance' ]
+		for ins in instances:
+			obj1 = next(wme[2] for wme in wmes if wme[0] == ins and wme[1] == '1')
+			obj1_cat = next(wme[2] for wme in wmes if wme[0] == obj1 and wme[1] == 'root-category')
+			obj2 = next(wme[2] for wme in wmes if wme[0] == ins and wme[1] == '2')
+			obj2_cat = next(wme[2] for wme in wmes if wme[0] == obj2 and wme[1] == 'root-category')
+			preds.append(handle + '(' + obj1_cat + '[' + obj1 + '],' + obj2_cat + '[' + obj2 + '])')
+	result = '\n======= Rosie Predicates =======\n' + '\n'.join(preds) + '\n'
+	insert_text(result)
+
+EOF
+
+command! -nargs=0 PrintRosieObjects :Python print_rosie_objects()
+command! -nargs=0 PrintRosiePredicates :Python print_rosie_preds()

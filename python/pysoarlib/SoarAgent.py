@@ -113,6 +113,8 @@ class SoarAgent():
         self.is_running = False
         self.queue_stop = False
 
+        self.dc_sleep = 0.0
+
         self.print_handler = print_handler
         if print_handler == None:
             self.print_handler = print
@@ -279,7 +281,9 @@ class SoarAgent():
 
 
     def _on_input_phase(self, input_link):
-       try:
+        if self.dc_sleep > 0:
+            sleep(self.dc_sleep)
+        try:
             if self.queue_stop:
                 self.agent.StopSelf()
                 self.queue_stop = False
@@ -292,9 +296,9 @@ class SoarAgent():
 
             if self.agent.IsCommitRequired():
                 self.agent.Commit()
-       except:
-           self.print_handler("ERROR IN RUN HANDLER")
-           self.print_handler(traceback.format_exc())
+        except:
+            self.print_handler("ERROR IN RUN HANDLER")
+            self.print_handler(traceback.format_exc())
 
 
     @staticmethod

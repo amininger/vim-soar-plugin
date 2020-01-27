@@ -75,6 +75,12 @@ def run_silent(num_dcs):
 	agent.stop_buffering_output()
 	agent.update_debugger_info()
 
+def run_slow(num_dcs):
+	agent.dc_sleep = 0.01
+	agent.agent.RunSelf(num_dcs)
+	agent.update_debugger_info()
+	agent.dc_sleep = 0.0
+
 def reset_debugger():
 	writer.clear_all_windows()
 	agent.reset()

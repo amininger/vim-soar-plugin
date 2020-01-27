@@ -46,6 +46,9 @@ nnoremap ;ru :Python run_silent(1000)<CR>
 " Run 1 elaboration cycle
 nnoremap ;re :Python agent.execute_command("run 1 -e")<CR>
 
+" Run 1000 dc slowly
+nnoremap ;rs :Python run_slow(1000)<CR>
+
 
 " See which rules currently match
 nnoremap ;ma :Python agent.execute_command("matches")<CR>

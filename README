@@ -186,6 +186,7 @@ U      | Run 10 decision cycles
 ;re    | Run 1 elaboration cycle (run 1 -e)
 ;r#    | Run #x100 decision cycles (e.g. ';r4 will run 400 decision cycles)
 ;ru    | Run 1000 decision cycles
+;rs    | Run 1000 decision cycles 'slowly' (will run at about 100 DC/s instead of full speed)
 
 """ PRINTING
 ;pr | Prints the full production [cursor is on rule name]

@@ -13,6 +13,12 @@ command! -nargs=1 -complete=file SourceSoarFile :call SourceSoarFile(<f-args>)
 " Will reject all operators with the given name (helpful to reset a substate) (debugger.vim)
 command! -nargs=1 RejectSoarOperator :call RejectSoarOperator(<f-args>)
 
+" Will source a rule that interrupts when the given operator is proposed (debugger.vim)
+command! -nargs=1 AddOpInterrupt :call AddOpInterrupt(<f-args>)
+
+" Will excise an interrupt rule for the given operator (debugger.vim)
+command! -nargs=1 RemoveOpInterrupt :call RemoveOpInterrupt(<f-args>)
+
 """"""""""""""""" Soar Plugin Key Mappings """""""""""""""""""
 
 " If you set the global variable enable_soar_plugin_mappings to 0

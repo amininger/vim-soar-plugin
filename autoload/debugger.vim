@@ -128,4 +128,15 @@ function! RejectSoarOperator(op_name)
 	call ExecuteSoarCommand("excise DEBUG*REJ")
 endfunction
 
+" Will source a rule that interrupts when the given operator is proposed
+function! AddOpInterrupt(op_name)
+	let prod = "sp {DEBUG*INTERRUPT*".a:op_name." (state <s> ^operator (<o> ^name ".a:op_name.") +) --> (interrupt) }"
+	call ExecuteSoarCommand(prod)
+endfunction
+
+" Will excise an interrupt rule for the given operator
+function! RemoveOpInterrupt(op_name)
+	call ExecuteSoarCommand("excise DEBUG*INTERRUPT*".a:op_name)
+endfunction
+
 

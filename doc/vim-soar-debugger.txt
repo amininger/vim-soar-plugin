@@ -156,6 +156,11 @@ SourceSoarFile <filename>   # The currently running agent will source the specif
 AddFileToSource             # Looks for <dir>_source.soar and appends a source command for the current file
 InsertSoarTemplate <template>   # Inserts a soar template of the given template name into the current file
 
+RejectSoarOperator <op-name> #  Will reject all operators with the given name for 1 dc
+
+AddOpInterrupt <op-name>    # Will source a rule that interrupts when the given operator is proposed
+RemoveOpInterrupt <op-name> # Will excise an interrupt rule for the given operator 
+
 ==================================================
 CONFIG FILE OPTIONS
 agent-name = <string>     | The name of the agent

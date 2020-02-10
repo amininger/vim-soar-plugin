@@ -57,6 +57,16 @@ function! vim_soar_plugin#OpenRosieDebugger()
 	Python agent.connect()
 endfunction
 
+function! vim_soar_plugin#OpenTaskTestDebugger(test_name)
+	let config_file = $ROSIE_HOME."/test-agents/task-tests/".a:test_name."/agent/rosie.".a:test_name.".config"
+	call SetupDebuggerPanes()
+	call SetupAgentMethods()
+	Python from VimRosieAgent import VimRosieAgent
+	Python simulator = None
+	Python agent = VimRosieAgent(writer, config_filename=vim.eval("config_file"), watch_level="1")
+	Python agent.connect()
+endfunction
+
 function! vim_soar_plugin#OpenRosieMobileDebugger()
 	let agent_name = input('Enter agent name: ', g:default_rosie_agent)
 	if agent_name =~ "config" 
@@ -104,3 +114,4 @@ function! vim_soar_plugin#OpenRosieCozmoDebugger()
 	call LaunchCozmoRobot()
 	Python agent.connect()
 endfunction
+

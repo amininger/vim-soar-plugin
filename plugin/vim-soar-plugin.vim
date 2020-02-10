@@ -37,3 +37,4 @@ command! -nargs=0 -complete=file ThorDebugger :call vim_soar_plugin#OpenRosieTho
 
 command! -nargs=0 -complete=file CozmoDebugger :call vim_soar_plugin#OpenRosieCozmoDebugger()
 
+command! -nargs=1 DebugTaskTest :call vim_soar_plugin#OpenTaskTestDebugger(<f-args>)

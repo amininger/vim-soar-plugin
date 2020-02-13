@@ -16,7 +16,12 @@ class VimRosieAgent(VimSoarAgent):
 
         if self.messages_file != None:
             with open(self.messages_file, 'r') as f:
-                vim.command("let g:rosie_messages = [\"" + "\",\"".join([ line.rstrip('\n') for line in f.readlines() if len(line.rstrip('\n')) > 0 and line[0] != '#']) + "\"]")
+                lines = ( line.strip() for line in f.readlines() )
+                # Filter empty lines and commented lines
+                lines = ( line for line in lines if len(line) > 0 and line[0] != '#' )
+                # Replace quotes with pipes
+                lines = ( line.replace('"', '|') for line in lines )
+                vim.command('let g:rosie_messages = ["' + '","'.join(lines) + '"]')
 
         self.connectors["language"] = VimLanguageConnector(self, writer)
 

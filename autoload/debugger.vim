@@ -59,6 +59,7 @@ import vim
 
 from VimSoarAgent import VimSoarAgent
 from VimWriter import VimWriter
+from RosieParser import pretty_print_world
 
 writer = VimWriter()
 
@@ -117,6 +118,10 @@ endfunction
 
 function! SaveSimulatorState()
 	Python if simulator: simulator.save()
+endfunction
+
+function! PrintRosieWorld()
+	Python writer.write(pretty_print_world(agent.get_command_result("pworld -d 4")))
 endfunction
 
 " Will reject all operators with the given name for 1 elaboration cycle,

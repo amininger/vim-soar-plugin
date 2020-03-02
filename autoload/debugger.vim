@@ -59,7 +59,6 @@ import vim
 
 from VimSoarAgent import VimSoarAgent
 from VimWriter import VimWriter
-from RosieParser import pretty_print_world
 
 writer = VimWriter()
 
@@ -77,8 +76,11 @@ def run_silent(num_dcs):
 	agent.update_debugger_info()
 
 def run_slow(num_dcs):
-	agent.dc_sleep = 0.01
-	agent.agent.RunSelf(num_dcs)
+	agent.dc_sleep = 0.001
+	if num_dcs == -1:
+		agent.agent.ExecuteCommandLine("run")
+	else:
+		agent.agent.RunSelf(num_dcs)
 	agent.update_debugger_info()
 	agent.dc_sleep = 0.0
 
@@ -144,4 +146,14 @@ function! RemoveOpInterrupt(op_name)
 	call ExecuteSoarCommand("excise DEBUG*INTERRUPT*".a:op_name)
 endfunction
 
+""" Will print out any chunks matching the given pattern
+function! FilterChunks(pattern)
+	Python from DebuggerUtil import get_filtered_chunks, insert_text_at_cursor
+	Python insert_text_at_cursor(get_filtered_chunks(agent, vim.eval('a:pattern')))
+endfunction
 
+""" Will print out any rules matching the given pattern
+function! FilterRules(pattern)
+	Python from DebuggerUtil import get_filtered_rules, insert_text_at_cursor
+	Python insert_text_at_cursor(get_filtered_rules(agent, vim.eval('a:pattern')))
+endfunction

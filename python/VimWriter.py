@@ -56,3 +56,4 @@ class VimWriter:
         """ Returns a reference to the vim window with the given identifier """
         return self.win_map[window]
 
+

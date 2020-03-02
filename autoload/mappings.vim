@@ -19,6 +19,12 @@ command! -nargs=1 AddOpInterrupt :call AddOpInterrupt(<f-args>)
 " Will excise an interrupt rule for the given operator (debugger.vim)
 command! -nargs=1 RemoveOpInterrupt :call RemoveOpInterrupt(<f-args>)
 
+" Will print out all chunks matching the given pattern
+command! -nargs=1 FilterChunks :call FilterChunks(<f-args>)
+
+" Will print out all rules matching the given pattern
+command! -nargs=1 FilterRules :call FilterRules(<f-args>)
+
 """"""""""""""""" Soar Plugin Key Mappings """""""""""""""""""
 
 " If you set the global variable enable_soar_plugin_mappings to 0
@@ -54,6 +60,7 @@ nnoremap ;re :Python agent.execute_command("run 1 -e")<CR>
 
 " Run 1000 dc slowly
 nnoremap ;rs :Python run_slow(1000)<CR>
+nnoremap ;rm :Python run_slow(-1)<CR>
 
 
 " See which rules currently match

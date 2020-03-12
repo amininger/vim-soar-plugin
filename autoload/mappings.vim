@@ -39,29 +39,36 @@ endif
 " Execute an arbitrary soar command
 nnoremap # :call ExecuteUserSoarCommand()<CR>
 
-" Step 1
-nnoremap H :Python step(1)<CR>
-" Run 10 dc
-nnoremap U :Python step(10)<CR>
-" Run # = run x100 
-nnoremap ;r1 :Python run_silent(100)<CR>
-nnoremap ;r2 :Python run_silent(200)<CR>
-nnoremap ;r3 :Python run_silent(300)<CR>
-nnoremap ;r4 :Python run_silent(400)<CR>
-nnoremap ;r5 :Python run_silent(500)<CR>
-nnoremap ;r6 :Python run_silent(600)<CR>
-nnoremap ;r7 :Python run_silent(700)<CR>
-nnoremap ;r8 :Python run_silent(800)<CR>
-nnoremap ;r9 :Python run_silent(900)<CR>
-" Run 1000 dc (Bad to run forever, will block all other commands)
-nnoremap ;ru :Python run_silent(1000)<CR>
-" Run 1 elaboration cycle
+" Run 1 elaboration cycle (run elab)
 nnoremap ;re :Python agent.execute_command("run 1 -e")<CR>
+" Run 1 dc
+nnoremap H :Python step(1)<CR>
+" Run 10 dc 
+nnoremap U :Python step(10)<CR>
+" Run 1000 dc (~ 1 sec)
+nnoremap ;ru :Python run_silent(1000)<CR>
+nnoremap ;rsu :Python run_slow(1000)<CR>
+" Run forever (until interrupted) (This is generally bad, if soar doesn't hit an interrupt vim will hang)
+nnoremap ;rf :Python agent.execute_command("run")<CR>
 
-" Run 1000 dc slowly
-nnoremap ;rs :Python run_slow(1000)<CR>
-nnoremap ;rm :Python run_slow(-1)<CR>
+" Key: ;r# means run 10^# decision cycles (e.g. ;r2 is run 100)
+nnoremap ;r0 :Python step(1)<CR>
+nnoremap ;r1 :Python run_silent(10)<CR>
+nnoremap ;r2 :Python run_silent(100)<CR>
+nnoremap ;r3 :Python run_silent(1000)<CR>
+nnoremap ;r4 :Python run_silent(10000)<CR>
+nnoremap ;r5 :Python run_silent(100000)<CR>
+nnoremap ;r6 :Python run_silent(1000000)<CR>
 
+" Run slowly (puts a delay between each decision cycle)
+nnoremap ;rs1 :Python run_slow(10)<CR>
+nnoremap ;rs2 :Python run_slow(100)<CR>
+nnoremap ;rs3 :Python run_slow(1000)<CR>
+nnoremap ;rs4 :Python run_slow(10000)<CR>
+nnoremap ;rs5 :Python run_slow(100000)<CR>
+nnoremap ;rs6 :Python run_slow(1000000)<CR>
+" run slowly forever
+nnoremap ;rsf :Python run_slow(-1)<CR>
 
 " See which rules currently match
 nnoremap ;ma :Python agent.execute_command("matches")<CR>

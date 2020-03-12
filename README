@@ -186,12 +186,16 @@ To disable these shortcuts, define the following global variable in your vimrc
 #      | Execute a custom soar command (will bring up prompt)
 
 """ Running the Agent
+;re    | Run 1 elaboration cycle (run 1 -e)
 H      | Run 1 decision cycle
 U      | Run 10 decision cycles
-;re    | Run 1 elaboration cycle (run 1 -e)
-;r#    | Run #x100 decision cycles (e.g. ';r4 will run 400 decision cycles)
 ;ru    | Run 1000 decision cycles
-;rs    | Run 1000 decision cycles 'slowly' (will run at about 100 DC/s instead of full speed)
+;rsu   | Run 1000 decision cycles 'slowly' (will run at about 100 DC/s instead of full speed)
+;rf    | Run forever (until interrupted). Note: This is discouraged, vim will hang forever unless soar stops itself
+;rsf   | Run forever slowly (until interrupted). Again, issues if soar never interrupts
+
+;r#    | Run 10^# dc's:  ;r2 will run 100  ;r4 will run 10000
+;rs#   | Run 10^# dc's slowly
 
 """ PRINTING
 ;pr | Prints the full production [cursor is on rule name]

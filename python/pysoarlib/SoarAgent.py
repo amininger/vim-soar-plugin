@@ -225,7 +225,7 @@ class SoarAgent():
                 args = line.split()
                 if len(args) == 3 and args[1] == '=':
                     settings[args[0].replace("-", "_")] = args[2]
-        return settings
+        return parse_settings(**settings)
 
     def _configure_settings(self, **kwargs):
         # Parse the given kwargs 
@@ -247,7 +247,7 @@ class SoarAgent():
         if self.source_config is not None and self.reconfig_on_launch:
             # Rerun the configuration tool and re-source the config file
             self.print_handler("RUNNING CONFIGURATOR: " + self.source_config)
-            subprocess.check_output(['java', 'edu.umich.rosie.tools.config.RosieAgentConfigurator', self.source_config])
+            self.print_handler(str(subprocess.check_output(['java', 'edu.umich.rosie.tools.config.RosieAgentConfigurator', self.source_config], stderr=subprocess.STDOUT)))
 
         self.agent = self.kernel.CreateAgent(self.agent_name)
         if self.spawn_debugger:

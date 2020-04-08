@@ -31,3 +31,7 @@ class VimRosieAgent(VimSoarAgent):
         stack = self.agent.ExecuteCommandLine("p --stack", False)
         self.vim_writer.write(stack, VimWriter.SIDE_PANE_BOT, clear=True, scroll=True)
 
+    def connect(self):
+        super().connect()
+        self.agent.RunSelf(1)
+

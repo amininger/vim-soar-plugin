@@ -162,6 +162,19 @@ AddOpInterrupt <op-name>    # Will source a rule that interrupts when the given 
 RemoveOpInterrupt <op-name> # Will excise an interrupt rule for the given operator 
 
 ==================================================
+DEBUGGER FUNCTIONS
+
+:call FilterChunks("match_str")
+# Will print out any chunks with the given string in the rule name
+
+:call FilterRules("match_str")
+# Will print out any rules with the given string in the rule name
+
+:call ExtractFiredRules("filename")
+# Will write all fired rules to the given file
+
+
+==================================================
 CONFIG FILE OPTIONS
 agent-name = <string>     | The name of the agent
 agent-source = <filename> | The soar file to source

@@ -89,7 +89,10 @@ class SoarAgent():
         if print_handler == None:
             self.print_handler = print
 
-        self.config_filename = config_filename
+        if config_filename == "":
+            self.config_filename = None
+        else:
+            self.config_filename = config_filename
 
         self._configure_settings(**kwargs)
 

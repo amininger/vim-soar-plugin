@@ -77,3 +77,18 @@ def get_filtered_chunks(agent, pattern):
             return_str += agent.get_command_result("p " + chunk_name)
 
     return return_str
+
+def extract_fired_rules(agent, filename):
+    """ Prints out all rules that have fired so far into a single file """
+    firing_counts = agent.get_command_result("fc").split("\n")
+    with open(filename, 'w') as f:
+        for line in firing_counts:
+            args = line.split()
+            # Want lines of the form     N: production*name
+            if len(args) < 2 or args[0][-1] != ':':
+                continue
+            count = int(args[0][:-1]) # strip colon
+            if count == 0:
+                continue
+            rule_name = args[1]
+            f.write(agent.get_command_result("p " + rule_name))

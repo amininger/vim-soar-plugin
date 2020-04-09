@@ -157,3 +157,9 @@ function! FilterRules(pattern)
 	Python from DebuggerUtil import get_filtered_rules, insert_text_at_cursor
 	Python insert_text_at_cursor(get_filtered_rules(agent, vim.eval('a:pattern')))
 endfunction
+
+""" Will write out all productions that have fired to a file with the given name
+function! ExtractFiredRules(filename)
+	Python from DebuggerUtil import extract_fired_rules
+	Python extract_fired_rules(agent, vim.eval('a:filename'))
+endfunction

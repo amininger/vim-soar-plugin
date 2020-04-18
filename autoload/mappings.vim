@@ -51,6 +51,12 @@ nnoremap ;rsu :Python run_slow(1000)<CR>
 " Run forever (until interrupted) (This is generally bad, if soar doesn't hit an interrupt vim will hang)
 nnoremap ;rf :Python agent.execute_command("run")<CR>
 
+" Run custom number of dc's silently
+command! -nargs=1 RunAgent :Python run_silent(<f-args>)<CR>
+
+" Run custom number of dc's slowly
+command! -nargs=1 RunSlow :Python run_slow(<f-args>)<CR>
+
 " Key: ;r# means run 10^# decision cycles (e.g. ;r2 is run 100)
 nnoremap ;r0 :Python step(1)<CR>
 nnoremap ;r1 :Python run_silent(10)<CR>

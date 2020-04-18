@@ -210,6 +210,9 @@ U      | Run 10 decision cycles
 ;r#    | Run 10^# dc's:  ;r2 will run 100  ;r4 will run 10000
 ;rs#   | Run 10^# dc's slowly
 
+:RunAgent [n] | Run custom number of dc's 
+:RunSlow [n]  | Run custom number of dc's slowly
+
 """ PRINTING
 ;pr | Prints the full production [cursor is on rule name]
 ;p# | Print the current identifier to # depth (;p2 ;p4 ...) [cursor is on identifier]

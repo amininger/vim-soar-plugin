@@ -4,7 +4,7 @@ import vim
 import traceback
 
 from string import digits
-from pysoarlib import AgentConnector
+from pysoarlib import AgentConnector, RosieMessageParser
 
 from VimWriter import VimWriter
 
@@ -27,25 +27,19 @@ def task_to_string(task_id):
 def task_arg_to_string(arg_id):
     arg_type = arg_id.GetChildString("arg-type")
     if arg_type == "object":
-        return obj_arg_to_string(arg_id.GetChildId("id"))
+        return RosieMessageParser.parse_obj(arg_id.GetChildId("id"))
     elif arg_type == "partial-predicate":
         handle_str = arg_id.GetChildString("handle")
-        obj2_str = obj_arg_to_string(arg_id.GetChildId("2"))
+        obj2_str = RosieMessageParser.parse_obj(arg_id.GetChildId("2"))
         return "%s(%s)" % ( handle_str, obj2_str )
     elif arg_type == "waypoint":
         wp_id = arg_id.GetChildId("id")
         return wp_id.GetChildString("handle")
     elif arg_type == "concept":
         return arg_id.GetChildString("handle")
+    elif arg_type == "measure":
+        return arg_id.GetChildString("number") + " " + arg_id.GetChildString("unit")
     return "?"
-
-def obj_arg_to_string(obj_id):
-    root_cat = obj_id.GetChildString("root-category")
-    preds_id = obj_id.GetChildId("predicates")
-    pred_names = [ "size", "color", "name", "shape" ]
-    preds = [ preds_id.GetChildString(pred) for pred in pred_names ] + [ root_cat ]
-    obj_desc = " ".join( p for p in preds if p is not None )
-    return obj_desc.translate(str.maketrans('', '', digits))
 
 class ActionStackConnector(AgentConnector):
     def __init__(self, agent, writer):

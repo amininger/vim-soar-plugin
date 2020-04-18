@@ -70,12 +70,14 @@ def step(num):
 	agent.update_debugger_info()
 
 def run_silent(num_dcs):
+	num_dcs = int(num_dcs)
 	agent.start_buffering_output()
 	agent.agent.RunSelf(num_dcs)
 	agent.stop_buffering_output()
 	agent.update_debugger_info()
 
 def run_slow(num_dcs):
+	num_dcs = int(num_dcs)
 	agent.dc_sleep = 0.001
 	if num_dcs == -1:
 		agent.agent.ExecuteCommandLine("run")

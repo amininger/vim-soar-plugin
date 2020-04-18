@@ -57,6 +57,48 @@ A class which can represent a WMElement with an `(<id> ^att value)` but takes ca
 
 You can update its value whenever you want, it will not affect working memory. To change working memory, call `add_to_wm`, `update_wm`, and `remove_from_wm` during an event callback (like BEFORE_INPUT_PHASE)
 
+## SoarUtils:
+
+`SoarUtils.update_wm_from_tree(root_id, root_name, input_dict, wme_table)`
+
+Will update working memory using the given `input_dict` as the provided structure rooted at `root_id`. 
+Created wme's are stored in the given `wme_table`, which should be a dictionary that is kept across
+multiple calls to this function. `root_name` specifies a prefix for each wme name in the wme_table. 
+
+```
+# input_dict should have the following structure:
+{
+  'attr1': getter() <- The value will be the result of calling the given getter function
+  'attr2': dict   <- The value will be a child identifier with its own recursive substructure
+}
+```
+
+
+
+
+`SoarUtils.extract_wm_graph(root_id, max_depth)`
+
+Recursively explores all working memory reachable from the given root_id (up to max_depth),
+builds up a graph structure representing all that information. 
+
+Note: max_depth is optional, and the function is smart about handling loops (will not recurse forever)
+
+```
+# Returns a dictionary representing all wmes rooted at the given identifier:
+{
+  '__id__': Identifier - the root identifier of this node
+  '__sym__': str - the symbol of root identifier of this node
+  'attr1': str | float | int - a constant wme
+  'attr2': dict - an identifier wme (recursive substructure)
+  'attr3': list[values] - a list of values/dicts if attr3 is a multivalued attribute
+}
+```
+
+`SoarUtils.print_wm_graph(wm_graph)`
+
+Will print the graph produced by extract_wm_graph in a nicely formatted way
+
+
 ## SVSCommands:
 A collection of helper functions to create string commands that can be send to SVS
 Here pos, rot, and scl are lists of 3 numbers (like [1, 2.5, 3.1])
@@ -165,6 +207,18 @@ Replaces the previous message, if there is one
 
 `register_message_callback(agent_message_callback)` 
 The given callback function is called when the agent puts a message on the output-link
+ 
+
+## RosieMessageParser
+Provides static utility functions for parsing Rosie messages from the agent
+
+`parse_agent_message(msg_id:Identifier, msg_type:str)`
+Takes the given identifier, representing a message from the Rosie agent of the given type, 
+and turns it into a natural language string
+
+`parse_obj(obj_id:Identifier)`
+Turns the given identifier, representing a rosie world object, and
+returns a natural language description of the object
 
 
 

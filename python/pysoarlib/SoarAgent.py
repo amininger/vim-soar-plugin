@@ -241,7 +241,6 @@ class SoarAgent():
                 if key not in kwargs:
                     self.settings[key] = value
 
-
     def _run_thread(self):
         self.agent.ExecuteCommandLine("run")
         self.is_running = False

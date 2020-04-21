@@ -8,6 +8,10 @@ def insert_text_at_cursor(text, scroll=True):
     if scroll:
         win.cursor = (win.cursor[0] + len(lines), 0)
 
+def print_identifier(agent, soar_id, depth=1):
+    """ Will return the printout of the given id to the given depth """
+    return agent.get_command_result("p " + soar_id + " -d " + str(depth))
+
 def parse_wm_printout(text):
     """ Given a printout of soar's working memory, parses it into a dictionary of wmes, 
         Where the keys are identifiers, and the values are lists of wme triples rooted at that id
@@ -55,6 +59,26 @@ def parse_wm_printout(text):
         cur_wmes.append( (cur_id, attr, val) )
     
     return wmes
+
+# Looks for the current operator by printing the stack and finding the last line
+#   that matches '  :        O: O452 (operator-name)'
+def get_current_operator(agent):
+    stack = agent.get_command_result("p --stack").split("\n")
+    for line in reversed(stack):
+        words = line.split()
+        if len(words) >= 3 and words[1] == 'O:':
+            return words[2]
+    return "O1"
+
+# Looks for the bottom state by printing the stack and finding the last line
+#   that matches '  :      ==>S: S124 (impasse-type)'
+def get_current_substate(agent):
+    stack = agent.get_command_result("p --stack").split("\n")
+    for line in reversed(stack):
+        words = line.split()
+        if len(words) >= 3 and words[1] == '==>S:':
+            return words[2]
+    return "S1"
 
 def get_filtered_rules(agent, pattern):
     """ Returns a printout of all rules that match the given pattern """

@@ -63,7 +63,7 @@ function! vim_soar_plugin#OpenTaskTestDebugger(test_name)
 	call SetupAgentMethods()
 	Python from VimRosieAgent import VimRosieAgent
 	Python simulator = None
-	Python agent = VimRosieAgent(writer, config_filename=vim.eval("config_file"), watch_level="1")
+	Python agent = VimRosieAgent(writer, config_filename=vim.eval("config_file"), watch_level="1", verbose="true")
 	Python agent.connect()
 endfunction
 

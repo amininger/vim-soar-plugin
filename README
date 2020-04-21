@@ -217,6 +217,12 @@ U      | Run 10 decision cycles
 ;pr | Prints the full production [cursor is on rule name]
 ;p# | Print the current identifier to # depth (;p2 ;p4 ...) [cursor is on identifier]
 
+;st | Prints out the current state (bottom of the stack)
+;s# | Prints out the current state to # depth (;s2)
+
+;op | Prints out the current operator (bottom operator)
+;o# | Prints out the current operator to # depth (;o2)
+
 """ EDITING
 ;or | Open the soar file defining the current rule name in a new tab [cursor is on rule name]
 ;op | Open the soar file defining the current production in a new tab [cursor is inside production]

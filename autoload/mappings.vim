@@ -36,6 +36,9 @@ if !g:enable_soar_plugin_mappings
 	finish
 endif
 
+" Change to the rosie/agent directory
+nnoremap ;2ra :cd $ROSIE_AGENT<CR>
+
 " Execute an arbitrary soar command
 nnoremap # :call ExecuteUserSoarCommand()<CR>
 
@@ -108,4 +111,24 @@ nnoremap ;p6 :call ExecuteSoarCommand("p ".GetSoarWord()." -d 6")<CR>
 nnoremap ;p7 :call ExecuteSoarCommand("p ".GetSoarWord()." -d 7")<CR>
 nnoremap ;p8 :call ExecuteSoarCommand("p ".GetSoarWord()." -d 8")<CR>
 nnoremap ;p9 :call ExecuteSoarCommand("p ".GetSoarWord()." -d 9")<CR>
+
+" print current state
+nnoremap ;st :call PrintCurrentState(1)<CR>
+nnoremap ;s1 :call PrintCurrentState(1)<CR>
+nnoremap ;s2 :call PrintCurrentState(2)<CR>
+nnoremap ;s3 :call PrintCurrentState(3)<CR>
+nnoremap ;s4 :call PrintCurrentState(4)<CR>
+
+" print current operator
+nnoremap ;op :call PrintCurrentOperator(2)<CR>
+nnoremap ;o1 :call PrintCurrentOperator(1)<CR>
+nnoremap ;o2 :call PrintCurrentOperator(2)<CR>
+nnoremap ;o3 :call PrintCurrentOperator(3)<CR>
+nnoremap ;o4 :call PrintCurrentOperator(4)<CR>
+nnoremap ;o5 :call PrintCurrentOperator(5)<CR>
+nnoremap ;o6 :call PrintCurrentOperator(6)<CR>
+
+" print rosie world
+nnoremap ;pw :call PrintRosieWorld()<CR>
+
 

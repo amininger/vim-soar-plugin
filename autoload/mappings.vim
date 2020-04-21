@@ -100,7 +100,6 @@ nnoremap ;er :call ExecuteSoarCommand("excise ".GetSoarWord())<CR>
 " firing count of rule name
 nnoremap ;fcr :call ExecuteSoarCommand("fc ".GetSoarWord())<CR>
 
-
 " print wmes
 nnoremap ;p1 :call ExecuteSoarCommand("p ".GetSoarWord())<CR>
 nnoremap ;p2 :call ExecuteSoarCommand("p ".GetSoarWord()." -d 2")<CR>
@@ -120,7 +119,6 @@ nnoremap ;s3 :call PrintCurrentState(3)<CR>
 nnoremap ;s4 :call PrintCurrentState(4)<CR>
 
 " print current operator
-nnoremap ;op :call PrintCurrentOperator(2)<CR>
 nnoremap ;o1 :call PrintCurrentOperator(1)<CR>
 nnoremap ;o2 :call PrintCurrentOperator(2)<CR>
 nnoremap ;o3 :call PrintCurrentOperator(3)<CR>

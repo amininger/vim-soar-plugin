@@ -21,13 +21,18 @@ endfunction
 
 """"""""""""""""" OPENING FILES """""""""""""""""""""
 
-" OpenSoarProductionInNewTab(prod_name, root_dir)
-" Will look for all files under the given root_dir
+" OpenSoarProductionInNewTab(prod_name)
+" Will look for all files under g:root_agent_directory
 "   that define the production with the given name (sp {prod_name )
 " And open each one as in a new tab
-function! OpenSoarProductionInNewTab(rule_name, root_dir)
+function! OpenSoarProductionInNewTab(rule_name)
+	if !exists("g:root_agent_directory")
+		echo "Need to define g:root_agent_directory to open production"
+		return
+	endif
+
 	" Note: we substitute * with . in the rule_name for grep to work properly
-	let command = "grep -nR \"sp {".substitute(a:rule_name, "*", ".", "g")." *$\" ".a:root_dir
+	let command = "grep -nR \"sp {".substitute(a:rule_name, "*", ".", "g")." *$\" ".g:root_agent_directory
 	let lines = split(system(command), "\n")
 	for line in lines
 		let parts = split(line, ":")

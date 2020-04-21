@@ -9,6 +9,7 @@ Purpose: This plugin is to integrate the soar debugger within a vim environment.
 
   This plugin also has a few features specific to the soargroup Rosie project 
 
+
 ===================================================
 PREREQUISITES
 
@@ -16,14 +17,14 @@ The code for editing soar files has no prereqs
 
 DEBUGGER ONLY: 
 
-SOAR with sml_python
-	You can pass --python=python3 into scons to compile with python 3
-	Add $SOAR_HOME to PYTHONPATH
-
 You need vim compiled with either python2 or python3 support
 
-You need pysoarlib on the PYTHONPATH
-	github.com/amininger/pysoarlib
+SOAR with sml_python
+	You can pass --python=python3 into scons to compile with python 3:
+	$> python2 scons/scons.py sml_python --python=python3
+
+Add $SOAR_HOME to PYTHONPATH
+
 
 ===================================================
 INSTALLATION
@@ -45,8 +46,9 @@ runtime plugin/vim-soar-plugin.vim
 * VUNDLE
 This plugin is compatible with vundle, just add the following line to your vimrc
   to the section sourcing plugins (see github.com/VundleVim/Vundle.vim for more info)
-Plugin 'file:///home/user/.vim/bundle/vim-soar-plugin'
+Plugin 'amininger/vim-soar-plugin'
     
+
 ===================================================
 PROJECT ORGANIZATION
 
@@ -59,6 +61,7 @@ plugin    - Code that defines functions and commands for editing soar files
 python    - Python code that creates and runs soar agents for the debugger
 templates - Collection of soar templates that can be inserted through the InsertSoarTemplate command (you can add more)
 
+
 ==================================================
 EDITING COMMANDS AND FEATURES
 
@@ -67,7 +70,7 @@ Even if you don't run the debugger, this plugin offers useful features for editi
 """ EDITING
 ;or | Open the soar file defining the current rule name in a new tab [cursor is on rule name]
 ;op | Open the soar file defining the current production in a new tab [cursor is inside production]
-Note: These look in the directory $ROSIE_HOME/agent
+Note: These assume that the global variable g:root_agent_directory is set
 
 """ COPYING
 ;yp | Yank (to buffer) the current production [cursor is inside production]
@@ -98,37 +101,10 @@ Note: These look in the directory $ROSIE_HOME/agent
 	Autocompletes using current subdirectories
 
 
-""" Other useful functions for parsing soar productions
-
-GetSoarProductionBody(line_num)
-	Returns the production a the given line (as a string)
-	If line_num is not given, this will use the current cursor position
-
-GetSoarProductionName(line_num)
-	Returns the name of the production at the given line
-	If line_num is not given, this will use the current cursor position
-
-GetSoarWord(row, col)
-	Returns the soar word at the given position 
-	(considers a word to be alpha-numeric, plus underscore, hypthen, and asterisk)
-	If row/col are not given, this will use the current cursor position
-
-GetSoarProductionInfo(line_num, commented)
-	Gets information about the soar production at the given line number
- 	  (line_num can be anywhere inside the production)
- 	  If no line_num is given, uses the current cursor position
- 	if commented is given and equals 1, this will look for #'s in front
-
- 	returns a 3-index array if inside a production (empty array otherwise)
- 	  prod_info[0] = production start line number
- 	  prod_info[1] = production end line number
- 	  prod_info[2] = production name
-
-
 ==================================================
 RUNNING THE EXAMPLE AGENT (Basic Tutorial)
 
-1. Open vim in the current (soar_plugin) directory
+1. Open vim in the current soar_plugin/example directory
 2. Run the command :SoarDebugger example.config
    This will open the debugger window layout and put the agent in a ready state
 3. Type # to bring up a soar prompt, then enter 'p s1' to print the top-state
@@ -141,6 +117,7 @@ RUNNING THE EXAMPLE AGENT (Basic Tutorial)
    This will show why the production currently matches
 9. Type U which will run the agent 10 decision cycles (it should count from 1-10)
 10. Type :CloseDebugger to close the debugger
+
 
 ==================================================
 DEBUGGER COMMANDS
@@ -216,11 +193,8 @@ U      | Run 10 decision cycles
 """ PRINTING
 ;pr | Prints the full production [cursor is on rule name]
 ;p# | Print the current identifier to # depth (;p2 ;p4 ...) [cursor is on identifier]
-
 ;st | Prints out the current state (bottom of the stack)
 ;s# | Prints out the current state to # depth (;s2)
-
-;op | Prints out the current operator (bottom operator)
 ;o# | Prints out the current operator to # depth (;o2)
 
 """ EDITING
@@ -260,3 +234,32 @@ U      | Run 10 decision cycles
 """ TEMPLATES
 Ctrl+P | Goes to the next insertion point in a template (marked by #!#)
 
+
+================================================
+SOAR PARSING HELPER FUNCTION
+
+""" Other useful functions for parsing soar productions
+
+GetSoarProductionBody(line_num)
+	Returns the production a the given line (as a string)
+	If line_num is not given, this will use the current cursor position
+
+GetSoarProductionName(line_num)
+	Returns the name of the production at the given line
+	If line_num is not given, this will use the current cursor position
+
+GetSoarWord(row, col)
+	Returns the soar word at the given position 
+	(considers a word to be alpha-numeric, plus underscore, hypthen, and asterisk)
+	If row/col are not given, this will use the current cursor position
+
+GetSoarProductionInfo(line_num, commented)
+	Gets information about the soar production at the given line number
+ 	  (line_num can be anywhere inside the production)
+ 	  If no line_num is given, uses the current cursor position
+ 	if commented is given and equals 1, this will look for #'s in front
+
+ 	returns a 3-index array if inside a production (empty array otherwise)
+ 	  prod_info[0] = production start line number
+ 	  prod_info[1] = production end line number
+ 	  prod_info[2] = production name

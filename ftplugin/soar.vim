@@ -26,9 +26,9 @@ nnoremap <buffer> ;cp :let @+ = GetSoarProductionBody()<CR>
 nnoremap <buffer> ;cr :let @+ = GetSoarWord()<CR>
 
 """""""""""""" editing.vim """""""""""""""""
-" open production (assumes ROSIE_HOME is set)
-nnoremap <buffer> ;or :call OpenSoarProductionInNewTab(GetSoarWord(), $ROSIE_HOME."/agent")<CR>
-nnoremap <buffer> ;op :call OpenSoarProductionInNewTab(GetSoarProductionName(), $ROSIE_HOME."/agent")<CR>
+" open production (assumes g:root_agent_directory is set)
+nnoremap <buffer> ;or :call OpenSoarProductionInNewTab(GetSoarWord())<CR>
+nnoremap <buffer> ;op :call OpenSoarProductionInNewTab(GetSoarProductionName())<CR>
 " delete production
 nnoremap <buffer> ;dp :call DeleteSoarProduction()<CR>
 " comment current production

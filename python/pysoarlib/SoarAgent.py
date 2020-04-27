@@ -89,10 +89,7 @@ class SoarAgent():
         if print_handler == None:
             self.print_handler = print
 
-        if config_filename == "":
-            self.config_filename = None
-        else:
-            self.config_filename = config_filename
+        self.config_filename = config_filename
 
         self._configure_settings(**kwargs)
 
@@ -126,6 +123,7 @@ class SoarAgent():
         self.print_event_callback_id = -1
         self.init_agent_callback_id = -1
         self.connectors = {}
+        self.print_event_handlers = []
 
         self.time_info = TimeInfo()
 
@@ -134,6 +132,11 @@ class SoarAgent():
     def add_connector(self, name, connector):
         """ Adds an AgentConnector to the agent """
         self.connectors[name] = connector
+
+    def add_print_event_handler(self, handler):
+        """ calls the given handler during each soar print event, 
+            where handler is a method taking a single string argument """
+        self.print_event_handlers.append(handler)
 
     def start(self):
         """ Will start the agent (uses another thread, so non-blocking) """
@@ -241,6 +244,7 @@ class SoarAgent():
                 if key not in kwargs:
                     self.settings[key] = value
 
+
     def _run_thread(self):
         self.agent.ExecuteCommandLine("run")
         self.is_running = False
@@ -249,7 +253,7 @@ class SoarAgent():
         if self.source_config is not None and self.reconfig_on_launch:
             # Rerun the configuration tool and re-source the config file
             self.print_handler("RUNNING CONFIGURATOR: " + self.source_config)
-            self.print_handler(str(subprocess.check_output(['java', 'edu.umich.rosie.tools.config.RosieAgentConfigurator', self.source_config], stderr=subprocess.STDOUT)))
+            subprocess.check_output(['java', 'edu.umich.rosie.tools.config.RosieAgentConfigurator', self.source_config])
 
         self.agent = self.kernel.CreateAgent(self.agent_name)
         if self.spawn_debugger:
@@ -337,6 +341,8 @@ class SoarAgent():
                 self.print_handler(message)
             if self.enable_log:
                 self.log_writer.write(message)
+            for ph in self.print_event_handlers:
+                ph(message)
         except:
             self.print_handler("ERROR IN PRINT HANDLER")
             self.print_handler(traceback.format_exc())

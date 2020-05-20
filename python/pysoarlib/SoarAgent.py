@@ -237,7 +237,7 @@ class SoarAgent():
         # Parse the given kwargs 
         self.settings = kwargs
         # Add any settings in the config file (if it exists)
-        if self.config_filename is not None:
+        if self.config_filename is not None and self.config_filename != "":
             config_settings = self._parse_config_file()
             for key, value in config_settings.items():
                 # Add settings from config file if not overridden in kwargs

@@ -61,47 +61,57 @@ from VimSoarAgent import VimSoarAgent
 from VimWriter import VimWriter
 
 writer = VimWriter()
+agent = None
 
-GLOBAL_STATE = {}
+SOAR_GLOBAL_STATE = {}
 run_thread = None
 
 def step(num):
-	agent.agent.RunSelf(num)
-	agent.update_debugger_info()
+	global agent
+	if agent is not None:
+		agent.agent.RunSelf(num)
+		agent.update_debugger_info()
 
 def run_silent(num_dcs):
-	num_dcs = int(num_dcs)
-	agent.start_buffering_output()
-	agent.agent.RunSelf(num_dcs)
-	agent.stop_buffering_output()
-	agent.update_debugger_info()
+	global agent
+	if agent is not None:
+		num_dcs = int(num_dcs)
+		agent.start_buffering_output()
+		agent.agent.RunSelf(num_dcs)
+		agent.stop_buffering_output()
+		agent.update_debugger_info()
 
 def run_slow(num_dcs):
-	num_dcs = int(num_dcs)
-	agent.dc_sleep = 0.001
-	if num_dcs == -1:
-		agent.agent.ExecuteCommandLine("run")
-	else:
-		agent.agent.RunSelf(num_dcs)
-	agent.update_debugger_info()
-	agent.dc_sleep = 0.0
+	global agent
+	if agent is not None:
+		num_dcs = int(num_dcs)
+		agent.dc_sleep = 0.001
+		if num_dcs == -1:
+			agent.agent.ExecuteCommandLine("run")
+		else:
+			agent.agent.RunSelf(num_dcs)
+		agent.update_debugger_info()
+		agent.dc_sleep = 0.0
 
 def reset_debugger():
-	writer.clear_all_windows()
-	agent.reset()
+	global agent
+	if agent is not None:
+		writer.clear_all_windows()
+		agent.reset()
 
 def close_debugger():
-	agent.kill()
-	if simulator:
-		simulator.stop()
-	if run_thread:
-		GLOBAL_STATE["running"] = False
-		run_thread.join()
-	while len(vim.windows) > 1:
-		vim.command("q!")
-	vim.command("e! temp")
-
-resize_windows()
+	global agent
+	if agent is not None:
+		agent.kill()
+		agent = None
+		if simulator:
+			simulator.stop()
+		if run_thread:
+			SOAR_GLOBAL_STATE["running"] = False
+			run_thread.join()
+		while len(vim.windows) > 1:
+			vim.command("q!")
+		vim.command("e! temp")
 EOF
 
 endfunction

@@ -236,6 +236,26 @@ Ctrl+P | Goes to the next insertion point in a template (marked by #!#)
 
 
 ================================================
+ROSIE SPECIFIC FEATURES
+
+I recommend adding the following to a .vimrc:
+	let g:root_agent_directory = $ROSIE_HOME."/agent"
+This will allow shortcuts that open soar rules (;op) to find the right files
+
+:RosieDebugger [config_file]
+	Will open the rosie-specific debugger with the given rosie config file
+	If config_file is not given, vim will prompt for an agent name from rosie/test-agents
+	A default can be specified via:  let g:default_rosie_agent = "name"
+Similarly, :MobileDebugger :CozmoDebugger :ThorDebugger will setup rosie for the different external environments
+
+:call SendMessageToRosie()
+	Will show a prompt to let you send a natural language sentence to rosie
+
+:call PrintRosieWorld() or ;prw
+	Prints the top-state world in a nicely-formatted way
+
+
+================================================
 SOAR PARSING HELPER FUNCTION
 
 """ Other useful functions for parsing soar productions
@@ -263,3 +283,4 @@ GetSoarProductionInfo(line_num, commented)
  	  prod_info[0] = production start line number
  	  prod_info[1] = production end line number
  	  prod_info[2] = production name
+

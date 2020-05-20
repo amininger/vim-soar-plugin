@@ -42,43 +42,54 @@ function! SendMessageToRosie()
 endfunction
 
 
-"""""""""""""""""""""""""" MOBILE SIMULATOR """"""""""""""""""""""""'
-function! LaunchMobileSimRosie()
-Python << EOF
-
-from mobilesim.rosie import LCMConnector, AgentCommandConnector, MobileSimPerceptionConnector, MobileSimActuationConnector
-
-lcmConn = LCMConnector(agent)
-agent.connectors["lcm"] = lcmConn
-agent.connectors["perception"] = MobileSimPerceptionConnector(agent, lcmConn.lcm)
-agent.connectors["perception"].print_handler = lambda message: writer.write(message)
-agent.connectors["actuation"] = MobileSimActuationConnector(agent, lcmConn.lcm)
-agent.connectors["actuation"].print_handler = lambda message: writer.write(message)
-agent.connectors["agent_cmd"] = AgentCommandConnector(agent, lcmConn.lcm)
-
-EOF
+""" Will set up the environment-specific interface code for different rosie domains
+"   env can be one of { internal, mobilesim, ai2thor, cozmo }
+function! SetupRosieInterface(env)
+	if a:env =~ "internal"
+		return
+	elseif a:env =~ "mobilesim"
+		Python setup_mobilesim_interface()
+	elseif a:env =~ "ai2thor"
+		Python setup_ai2thor_interface()
+	elseif a:env =~ "cozmo"
+		Python setup_cozmo_interface()
+	else
+		echom "Unrecognized rosie environment: ".a:env
+	endif
 endfunction
+
+
+"""""""""""""""""""""""""" MOBILE SIMULATOR """"""""""""""""""""""""'
+Python << EOF
+def setup_mobilesim_interface():
+	from mobilesim.rosie import LCMConnector, AgentCommandConnector, MobileSimPerceptionConnector, MobileSimActuationConnector
+
+	lcmConn = LCMConnector(agent)
+	agent.connectors["lcm"] = lcmConn
+	agent.connectors["perception"] = MobileSimPerceptionConnector(agent, lcmConn.lcm)
+	agent.connectors["perception"].print_handler = lambda message: writer.write(message)
+	agent.connectors["actuation"] = MobileSimActuationConnector(agent, lcmConn.lcm)
+	agent.connectors["actuation"].print_handler = lambda message: writer.write(message)
+	agent.connectors["agent_cmd"] = AgentCommandConnector(agent, lcmConn.lcm)
+EOF
 
 """""""""""""""""""""""""" AI2THOR SIMULATOR """"""""""""""""""""""""'
 
-function! LaunchAi2ThorSimulator()
 Python << EOF
+def setup_ai2thor_interface():
+	from rosiethor import MapUtil, NavigationHelper, Ai2ThorSimulator, PerceptionConnector, RobotConnector
 
-from rosiethor import MapUtil, NavigationHelper, Ai2ThorSimulator, PerceptionConnector, RobotConnector
+	scene_name = agent.settings.get("ai2thor_scene", "testing")
 
-scene_name = agent.settings.get("ai2thor_scene", "testing")
+	simulator = Ai2ThorSimulator()
 
-simulator = Ai2ThorSimulator()
+	agent.connectors["perception"] = PerceptionConnector(agent, simulator)
+	agent.connectors["perception"].print_handler = lambda message: writer.write(message)
+	agent.connectors["robot"] = RobotConnector(agent, simulator)
+	agent.connectors["robot"].print_handler = lambda message: writer.write(message)
 
-agent.connectors["perception"] = PerceptionConnector(agent, simulator)
-agent.connectors["perception"].print_handler = lambda message: writer.write(message)
-agent.connectors["robot"] = RobotConnector(agent, simulator)
-agent.connectors["robot"].print_handler = lambda message: writer.write(message)
-
-simulator.start(scene_name)
-
+	simulator.start(scene_name)
 EOF
-endfunction
 
 """ Will enter a mode where keypresses will send movement commands to the ai2thor robot
 """ Move with WASD, Rotate with Q/E, Look up/down with R/F
@@ -111,34 +122,31 @@ endfunction
 
 """""""""""""""""""""""""" COZMO ROBOT """"""""""""""""""""""""'
 
-function! LaunchCozmoRobot()
 Python << EOF
+def setup_cozmo_interface():
+	import cozmo
+	import pysoarlib
 
-import cozmo
-import pysoarlib
+	from threading import Thread
+	from time import sleep
 
-from threading import Thread
-from time import sleep
+	from cozmosoar.c_soar_util import COZMO_COMMANDS
+	from cozmosoar.cozmo_soar import CozmoSoar
 
-from cozmosoar.c_soar_util import COZMO_COMMANDS
-from cozmosoar.cozmo_soar import CozmoSoar
+	def create_robot_connector(robot: cozmo.robot):
+		cozmo_robot = CozmoSoar(agent, robot)
+		for command in COZMO_COMMANDS:
+			cozmo_robot.add_output_command(command)
+		cozmo_robot.print_handler = lambda message: writer.write(message)
+		agent.add_connector("cozmo", cozmo_robot)
+		cozmo_robot.connect()
+		SOAR_GLOBAL_STATE["running"] = True
+		while SOAR_GLOBAL_STATE["running"]:
+			sleep(0.1)
 
-def create_robot_connector(robot: cozmo.robot):
-	cozmo_robot = CozmoSoar(agent, robot)
-	for command in COZMO_COMMANDS:
-		cozmo_robot.add_output_command(command)
-	cozmo_robot.print_handler = lambda message: writer.write(message)
-	agent.add_connector("cozmo", cozmo_robot)
-	cozmo_robot.connect()
-	GLOBAL_STATE["running"] = True
-	while GLOBAL_STATE["running"]:
-		sleep(0.1)
+	def cozmo_thread():
+		cozmo.run_program(create_robot_connector)
 
-def cozmo_thread():
-	cozmo.run_program(create_robot_connector)
-
-run_thread = Thread(target=cozmo_thread)
-run_thread.start()
-
+	run_thread = Thread(target=cozmo_thread)
+	run_thread.start()
 EOF
-endfunction

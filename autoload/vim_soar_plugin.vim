@@ -29,12 +29,18 @@ exec "source ".g:vim_soar_plugin_root_dir."/autoload/rosie.vim"
 exec "source ".g:vim_soar_plugin_root_dir."/autoload/mappings.vim"
 
 
+" Will open the soar debugging environment
+"   You can optionally specify a config file to use when creating the agent
 function! vim_soar_plugin#OpenSoarDebugger(...)
+	" If an argument is given, it is the config filename
 	let config_file = ""
-	if a:0 == 1
+	if a:0 > 0
 		let config_file = a:1
 	endif
-	echom config_file
+	if config_file != "" && !filereadable(config_file)
+		echom "The given config file ".config_file." does not exist"
+		return
+	endif
 	call SetupDebuggerPanes()
 	call SetupAgentMethods()
 	Python simulator = None
@@ -42,76 +48,29 @@ function! vim_soar_plugin#OpenSoarDebugger(...)
 	Python agent.connect()
 endfunction
 
-function! vim_soar_plugin#OpenRosieDebugger()
-	let agent_name = input('Enter agent name: ', g:default_rosie_agent)
-	if agent_name =~ "config" 
-		let config_file = $ROSIE_HOME."/test-agents/".agent_name
+" Will open a rosie-specific debugger
+"   env defines which environment interface to use and 
+"       can be one of { internal, mobilesim, ai2thor, cozmo }
+"   config_file is optional and specifies how to initialize the config file
+function! vim_soar_plugin#OpenRosieDebugger(env, ...)
+	" If a second argument is given, it is the config filename
+	let config_file = ""
+	if a:0 > 0
+		let config_file = a:1
 	else
+		let agent_name = input('Enter agent name: ', g:default_rosie_agent)
 		let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
+	endif
+	if !filereadable(config_file)
+		echom "The given config file ".config_file." does not exist"
+		return
 	endif
 	call SetupDebuggerPanes()
 	call SetupAgentMethods()
 	Python from VimRosieAgent import VimRosieAgent
 	Python simulator = None
 	Python agent = VimRosieAgent(writer, config_filename=vim.eval("config_file"))
-	Python agent.connect()
-endfunction
-
-function! vim_soar_plugin#OpenTaskTestDebugger(test_name)
-	let config_file = $ROSIE_HOME."/test-agents/task-tests/".a:test_name."/agent/rosie.".a:test_name.".config"
-	call SetupDebuggerPanes()
-	call SetupAgentMethods()
-	Python from VimRosieAgent import VimRosieAgent
-	Python simulator = None
-	Python agent = VimRosieAgent(writer, config_filename=vim.eval("config_file"), watch_level="1", verbose="true")
-	Python agent.connect()
-endfunction
-
-function! vim_soar_plugin#OpenRosieMobileDebugger()
-	let agent_name = input('Enter agent name: ', g:default_rosie_agent)
-	if agent_name =~ "config" 
-		let config_file = $ROSIE_HOME."/test-agents/".agent_name
-	else
-		let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
-	endif
-	call SetupDebuggerPanes()
-	call SetupAgentMethods()
-	Python from VimRosieAgent import VimRosieAgent
-	Python simulator = None
-	Python agent = VimRosieAgent(writer, config_filename=vim.eval("config_file"))
-	call LaunchMobileSimRosie()
-	Python agent.connect()
-endfunction
-
-function! vim_soar_plugin#OpenRosieThorDebugger()
-	let agent_name = input('Enter agent name: ', g:default_rosie_agent)
-	if agent_name =~ "config" 
-		let config_file = $ROSIE_HOME."/test-agents/".agent_name
-	else
-		let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
-	endif
-	call SetupDebuggerPanes()
-	call SetupAgentMethods()
-	Python from VimRosieAgent import VimRosieAgent
-	Python simulator = None
-	Python agent = VimRosieAgent(writer, config_filename=vim.eval("config_file"))
-	call LaunchAi2ThorSimulator()
-	Python agent.connect()
-endfunction
-
-function! vim_soar_plugin#OpenRosieCozmoDebugger()
-	let agent_name = input('Enter agent name: ', g:default_rosie_agent)
-	if agent_name =~ "config" 
-		let config_file = $ROSIE_HOME."/test-agents/".agent_name
-	else
-		let config_file = $ROSIE_HOME."/test-agents/".agent_name."/agent/rosie.".agent_name.".config"
-	endif
-	call SetupDebuggerPanes()
-	call SetupAgentMethods()
-	Python from VimRosieAgent import VimRosieAgent
-	Python simulator = None
-	Python agent = VimRosieAgent(writer, config_filename=vim.eval("config_file"))
-	call LaunchCozmoRobot()
+	call SetupRosieInterface(a:env)
 	Python agent.connect()
 endfunction
 

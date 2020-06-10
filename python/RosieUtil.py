@@ -1,6 +1,6 @@
 from DebuggerUtil import parse_wm_printout
 
-get_value = lambda wmes, id, attr: next((wme[2] for wme in wmes[id] if wme[1] == attr), None)
+get_value = lambda wmes, id, attr: next((wme[2] for wme in wmes.get(id, []) if wme[1] == attr), None)
 
 def pretty_print_world(text):
     return_str = ""

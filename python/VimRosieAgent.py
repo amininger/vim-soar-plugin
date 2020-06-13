@@ -26,6 +26,8 @@ class VimRosieAgent(RosieAgent):
             lambda message: writer.write(message, VimWriter.MAIN_PANE, clear=False, scroll=True))
         self.connectors["language"].register_message_callback(
             lambda message: writer.write(message, VimWriter.SIDE_PANE_TOP, clear=False, scroll=True))
+        self.connectors["language"].register_script_callback(
+            lambda message: writer.write(message, VimWriter.SIDE_PANE_TOP, clear=False, scroll=True))
 
         self.connectors["action_stack"] = ActionStackConnector(self, print_handler = 
             lambda message: writer.write(message, VimWriter.MAIN_PANE, clear=False, scroll=True))

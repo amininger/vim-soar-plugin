@@ -118,7 +118,7 @@ endfunction
 
 function! ExecuteUserSoarCommand()
 	let cmd = input('Enter command: ')
-	Python agent.execute_command(vim.eval("cmd"))
+	Python agent.execute_command(vim.eval("cmd"), True)
 	Python agent.update_debugger_info()
 endfunction
 
@@ -127,7 +127,7 @@ function! SourceSoarFile(filename)
 endfunction
 
 function! ExecuteSoarCommand(cmd)
-	Python agent.execute_command(vim.eval("a:cmd"))
+	Python agent.execute_command(vim.eval("a:cmd"), True)
 endfunction
 
 function! SaveSimulatorState()
@@ -188,5 +188,5 @@ endfunction
 
 """ Will print out the top-state rosie world in a pretty format
 function! PrintRosieWorld()
-	Python writer.write(pretty_print_world(agent.get_command_result("pworld -d 4")))
+	Python writer.write(pretty_print_world(agent.execute_command("pworld -d 4")))
 endfunction

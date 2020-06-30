@@ -50,6 +50,6 @@ syn keyword soarRhsKeyword div mod abs atan2 sqrt sin cos int float contained
 syn keyword soarRhsKeyword timestamp make-constant-symbol capitalize-symbol contained state
 hi def link soarRhsKeyword Keyword
 
-syn region soarProduction start="^sp" end="}" fold contains=soarRuleName,soarWme
+syn region soarProduction start="^sp" end="}" fold contains=soarRuleName,soarComment,soarWme
 " syn region smemCommand start="^smem --add" end="}" fold contains=soarWme
 

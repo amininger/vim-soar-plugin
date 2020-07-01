@@ -29,6 +29,6 @@ agent = SoarAgent(config_filename="example.config", write_to_stdout=True)
 agent.add_connector("simple", SimpleConnector(agent))
 agent.connect()
 
-agent.execute_command("run 12", True)
+agent.execute_command("run 12")
 
 agent.kill()

@@ -29,6 +29,8 @@ command! -nargs=1 -complete=customlist,ListSoarTemplates InsertSoarTemplate :cal
 " Debugger commands aren't loaded until you call the OpenDebugger Command
 command! -nargs=? -complete=file SoarDebugger :call vim_soar_plugin#OpenSoarDebugger(<f-args>)
 
+command! RemoteDebugger :call vim_soar_plugin#OpenRemoteDebugger()
+
 command! -nargs=? -complete=file RosieDebugger :call vim_soar_plugin#OpenRosieDebugger("internal", <f-args>)
 
 command! -nargs=? -complete=file MobileDebugger :call vim_soar_plugin#OpenRosieDebugger("mobilesim", <f-args>)

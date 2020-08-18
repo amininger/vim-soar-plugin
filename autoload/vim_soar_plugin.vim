@@ -48,6 +48,15 @@ function! vim_soar_plugin#OpenSoarDebugger(...)
 	Python agent.connect()
 endfunction
 
+" Will connect to a remote kernel and allow you to debug it
+function! vim_soar_plugin#OpenRemoteDebugger(...)
+	call SetupDebuggerPanes()
+	call SetupAgentMethods()
+	Python simulator = None
+	Python agent = VimSoarAgent(writer, remote_connection=True)
+	Python agent.connect()
+endfunction
+
 " Will open a rosie-specific debugger
 "   env defines which environment interface to use and 
 "       can be one of { internal, mobilesim, ai2thor, cozmo }

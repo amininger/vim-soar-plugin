@@ -118,7 +118,7 @@ endfunction
 
 function! ExecuteUserSoarCommand()
 	let cmd = input('Enter command: ')
-	Python agent.execute_command(vim.eval("cmd"))
+	Python agent.execute_command(vim.eval("cmd"), True)
 	Python agent.update_debugger_info()
 endfunction
 
@@ -127,7 +127,7 @@ function! SourceSoarFile(filename)
 endfunction
 
 function! ExecuteSoarCommand(cmd)
-	Python agent.execute_command(vim.eval("a:cmd"))
+	Python agent.execute_command(vim.eval("a:cmd"), True)
 endfunction
 
 function! SaveSimulatorState()
@@ -168,25 +168,25 @@ endfunction
 
 """ Will write out all productions that have fired to a file with the given name
 function! ExtractFiredRules(filename)
-	Python from DebuggerUtil import extract_fired_rules
-	Python extract_fired_rules(agent, vim.eval('a:filename'))
+	Python from DebuggerUtil import write_fired_rules
+	Python write_fired_rules(agent, vim.eval('a:filename'))
 endfunction
 
 """ Will print out the bottom state on the task stack to the given depth
 function! PrintCurrentState(depth)
-    Python from DebuggerUtil import get_current_substate, print_identifier
+    Python from DebuggerUtil import get_current_substate, print_id
     Python state_id = get_current_substate(agent)
-	Python writer.write(print_identifier(agent, state_id, vim.eval('a:depth')))
+	Python writer.write(print_id(agent, state_id, vim.eval('a:depth')))
 endfunction
 
 """ Will print out the current operator to the given depth
 function! PrintCurrentOperator(depth)
-    Python from DebuggerUtil import get_current_operator, print_identifier
+    Python from DebuggerUtil import get_current_operator, print_id
     Python op_id = get_current_operator(agent)
-	Python writer.write(print_identifier(agent, op_id, vim.eval('a:depth')))
+	Python writer.write(print_id(agent, op_id, vim.eval('a:depth')))
 endfunction
 
 """ Will print out the top-state rosie world in a pretty format
 function! PrintRosieWorld()
-	Python writer.write(pretty_print_world(agent.get_command_result("pworld -d 4")))
+	Python writer.write(pretty_print_world(agent.execute_command("pworld -d 4")))
 endfunction

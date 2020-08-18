@@ -124,6 +124,7 @@ DEBUGGER COMMANDS
 
 SoarDebugger <config-file>  # Launch the debugger
 							# You can pass an optional <config-file> to use to initialize the agent (details below)
+RemoteDebugger              # Will connect to a remote Soar kernel and allow you debug remotely
 ResetDebugger               # Complete destroys and restarts the agent from a clean state (discards learned rules)
 CloseDebugger               # Closes the debugger and deletes the agent
 

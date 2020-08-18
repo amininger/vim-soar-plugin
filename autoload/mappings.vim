@@ -43,7 +43,7 @@ nnoremap ;2ra :cd $ROSIE_AGENT<CR>
 nnoremap # :call ExecuteUserSoarCommand()<CR>
 
 " Run 1 elaboration cycle (run elab)
-nnoremap ;re :Python agent.execute_command("run 1 -e")<CR>
+nnoremap ;re :Python agent.execute_command("run 1 -e", True)<CR>
 " Run 1 dc
 nnoremap H :Python step(1)<CR>
 " Run 10 dc 
@@ -52,7 +52,7 @@ nnoremap U :Python step(10)<CR>
 nnoremap ;ru :Python run_silent(1000)<CR>
 nnoremap ;rsu :Python run_slow(1000)<CR>
 " Run forever (until interrupted) (This is generally bad, if soar doesn't hit an interrupt vim will hang)
-nnoremap ;rf :Python agent.execute_command("run")<CR>
+nnoremap ;rf :Python agent.execute_command("run", True)<CR>
 
 " Run custom number of dc's silently
 command! -nargs=1 RunAgent :Python run_silent(<f-args>)<CR>
@@ -80,7 +80,7 @@ nnoremap ;rs6 :Python run_slow(1000000)<CR>
 nnoremap ;rsf :Python run_slow(-1)<CR>
 
 " See which rules currently match
-nnoremap ;ma :Python agent.execute_command("matches")<CR>
+nnoremap ;ma :Python agent.execute_command("matches", True)<CR>
 
 " source production
 nnoremap ;sp :call ExecuteSoarCommand(GetSoarProductionBody())<CR>

@@ -2,8 +2,8 @@
 
 """ Will print the current world + objects in a easy to read format
 function! PrintRosieWorld()
-	Python from RosieUtil import pretty_print_world
-	Python writer.write(pretty_print_world(agent.get_command_result("pworld -d 4")))
+	Python from rosie.tools import pretty_print_world
+	Python writer.write(pretty_print_world(agent.execute_command("pworld -d 4")))
 endfunction
 
 

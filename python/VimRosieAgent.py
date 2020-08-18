@@ -2,17 +2,16 @@
 import sys
 import vim
 
-from pysoarlib import SoarAgent
+from rosie import ActionStackConnector, LanguageConnector, RosieAgent
 
-from VimLanguageConnector import VimLanguageConnector
-from ActionStackConnector import ActionStackConnector
 from VimWriter import VimWriter
-from VimSoarAgent import VimSoarAgent
 
-class VimRosieAgent(VimSoarAgent):
+class VimRosieAgent(RosieAgent):
     def __init__(self, writer, config_filename=None, **kwargs):
         self.vim_writer = writer
-        VimSoarAgent.__init__(self, writer, config_filename=config_filename, **kwargs)
+        RosieAgent.__init__(self, config_filename=config_filename, 
+                print_handler = lambda message: writer.write(message, VimWriter.MAIN_PANE, clear=False, scroll=True),
+                spawn_debugger=False, write_to_stdout=True, **kwargs)
 
         if self.messages_file != None:
             with open(self.messages_file, 'r') as f:
@@ -23,9 +22,17 @@ class VimRosieAgent(VimSoarAgent):
                 lines = ( line.replace('"', '|') for line in lines )
                 vim.command('let g:rosie_messages = ["' + '","'.join(lines) + '"]')
 
-        self.connectors["language"] = VimLanguageConnector(self, writer)
+        self.connectors["language"] = LanguageConnector(self, 
+            lambda message: writer.write(message, VimWriter.MAIN_PANE, clear=False, scroll=True))
+        self.connectors["language"].register_message_callback(
+            lambda message: writer.write(message, VimWriter.SIDE_PANE_TOP, clear=False, scroll=True))
+        self.connectors["language"].register_script_callback(
+            lambda message: writer.write(message, VimWriter.SIDE_PANE_TOP, clear=False, scroll=True))
 
-        self.connectors["action_stack"] = ActionStackConnector(self, writer)
+        self.connectors["action_stack"] = ActionStackConnector(self, print_handler = 
+            lambda message: writer.write(message, VimWriter.MAIN_PANE, clear=False, scroll=True))
+        self.connectors["action_stack"].register_task_change_callback(
+            lambda message: writer.write(message, VimWriter.SIDE_PANE_MID, clear=False, scroll=True, strip=False))
 
     def update_debugger_info(self):
         stack = self.agent.ExecuteCommandLine("p --stack", False)
@@ -34,4 +41,18 @@ class VimRosieAgent(VimSoarAgent):
     def connect(self):
         super().connect()
         self.agent.RunSelf(1)
+
+    def start_buffering_output(self):
+        self.buffered_output = []
+        self.print_handler = lambda message: self.buffered_output.append(message)
+
+    def stop_buffering_output(self):
+        self.print_handler = lambda message: self.vim_writer.write(message, VimWriter.MAIN_PANE, clear=False, scroll=True)
+        self.print_handler("\n".join(self.buffered_output))
+        self.buffered_output = []
+
+
+        
+
+
 

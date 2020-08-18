@@ -32,9 +32,9 @@ hi soarRuleName cterm=bold ctermfg=lightgreen
 
 syn region soarWme start="(" end=")" contains=soarNameWme,soarIdentifier,soarAttribute,soarValue,soarRhsKeyword contained
 syn match soarNames "\( [a-zA-Z0-9_-]\+\)\+" contained
-syn match soarNameWme "\^name.*\($\|[)^]\)" contains=soarNames
-syn match soarNameWme "\^operator\.name.*\($\|[)^]\)" contains=soarNames
-syn match soarNameWme "\^superstate\.name.*\($\|[)^]\)" contains=soarNames
+syn match soarNameWme "\^name.*\($\|[)^]\)" contains=soarNames contained
+syn match soarNameWme "\^operator\.name.*\($\|[)^]\)" contains=soarNames contained
+syn match soarNameWme "\^superstate\.name.*\($\|[)^]\)" contains=soarNames contained
 hi def link soarNames Identifier
 hi soarNames ctermfg=lightgreen
 hi soarNameWme ctermfg=white

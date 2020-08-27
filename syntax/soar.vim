@@ -7,6 +7,8 @@ if exists("b:current_syntax")
 	finish
 endif
 
+set iskeyword+=-,*
+
 let b:current_syntax = "soar"
 
 syn match soarComment "#.*$"

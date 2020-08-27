@@ -7,7 +7,10 @@ if exists("b:current_syntax")
 	finish
 endif
 
-set iskeyword+=-,*
+" Adds dashes to what is considered a keyword, 
+"   so commands that involve a whole word (such as movement w/b and
+"   autocomplete) will consider a word like top-state as one word
+set iskeyword+=-
 
 let b:current_syntax = "soar"
 

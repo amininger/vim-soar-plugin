@@ -5,7 +5,7 @@ function! PrintRosieWorld(state_id)
 Python << EOF
 
 from pysoarlib.util import parse_wm_printout
-from rosie.tools import pretty_print_world
+from rosie.tools import parse_world
 
 # Print the given state
 state_id = vim.eval("a:state_id")
@@ -14,11 +14,13 @@ state_wmes = parse_wm_printout(agent.execute_command("p " + state_id))
 # Find the wme (<state_id> ^world <world_id>) and get the value identifier
 world_id = next(wme[2] for wme in state_wmes.get(state_id) if wme[1] == 'world')
 
-# Print out the world using the pretty_print_world formatter
-writer.write(pretty_print_world(agent.execute_command("p " + world_id + " -d 4")))
+# Print out the world using the world_to_string formatter
+writer.write(parse_world(agent.execute_command("p " + world_id + " -d 4")))
 
 EOF
 endfunction
+
+""" Will print out any task operators 
 
 
 """""""""""""""""""""""""" SENDING MESSAGES """"""""""""""""""""""""'

@@ -127,6 +127,6 @@ nnoremap ;o5 :call PrintCurrentOperator(5)<CR>
 nnoremap ;o6 :call PrintCurrentOperator(6)<CR>
 
 " print rosie world
-nnoremap ;pw :call PrintRosieWorld()<CR>
+nnoremap ;prw :call PrintRosieWorld("S1")<CR>
 
 

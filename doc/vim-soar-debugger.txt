@@ -252,7 +252,7 @@ Similarly, :MobileDebugger :CozmoDebugger :ThorDebugger will setup rosie for the
 :call SendMessageToRosie()
 	Will show a prompt to let you send a natural language sentence to rosie
 
-:call PrintRosieWorld() or ;prw
+:call PrintRosieWorld("S1") or ;prw
 	Prints the top-state world in a nicely-formatted way
 
 

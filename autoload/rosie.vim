@@ -1,9 +1,23 @@
 """" Rosie Specific Functionality """"
 
-""" Will print the current world + objects in a easy to read format
-function! PrintRosieWorld()
-	Python from rosie.tools import pretty_print_world
-	Python writer.write(pretty_print_world(agent.execute_command("pworld -d 4")))
+""" Will print the world + objects of the given state in a easy to read format
+function! PrintRosieWorld(state_id)
+Python << EOF
+
+from pysoarlib.util import parse_wm_printout
+from rosie.tools import pretty_print_world
+
+# Print the given state
+state_id = vim.eval("a:state_id")
+state_wmes = parse_wm_printout(agent.execute_command("p " + state_id))
+
+# Find the wme (<state_id> ^world <world_id>) and get the value identifier
+world_id = next(wme[2] for wme in state_wmes.get(state_id) if wme[1] == 'world')
+
+# Print out the world using the pretty_print_world formatter
+writer.write(pretty_print_world(agent.execute_command("p " + world_id + " -d 4")))
+
+EOF
 endfunction
 
 

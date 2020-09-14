@@ -4,23 +4,33 @@
 function! PrintRosieWorld(state_id)
 Python << EOF
 
-from pysoarlib.util import parse_wm_printout
-from rosie.tools import parse_world
+from pysoarlib.util import PrintoutIdentifier
+from rosie.tools import world_to_str
 
 # Print the given state
-state_id = vim.eval("a:state_id")
-state_wmes = parse_wm_printout(agent.execute_command("p " + state_id))
-
-# Find the wme (<state_id> ^world <world_id>) and get the value identifier
-world_id = next(wme[2] for wme in state_wmes.get(state_id) if wme[1] == 'world')
+state_id = PrintoutIdentifier.create(agent, vim.eval("a:state_id"), 1)
+world_sym = state_id.GetChildId('world').GetIdentifierSymbol()
 
 # Print out the world using the world_to_string formatter
-writer.write(parse_world(agent.execute_command("p " + world_id + " -d 4")))
+world_id = PrintoutIdentifier.create(agent, world_sym, 4)
+writer.write(world_to_str(world_id))
 
 EOF
 endfunction
 
-""" Will print out any task operators 
+""" Will print a summarized description of the given task-operator identifier
+function! PrintTaskOperator(task_id)
+Python << EOF
+
+from pysoarlib.util import PrintoutIdentifier
+from rosie.tools import task_to_str
+
+task_sym = vim.eval("a:task_id")
+task_id = PrintoutIdentifier.create(agent, task_sym, 6)
+writer.write(task_to_str(task_id))
+
+EOF
+endfunction
 
 
 """""""""""""""""""""""""" SENDING MESSAGES """"""""""""""""""""""""'

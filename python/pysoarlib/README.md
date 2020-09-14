@@ -78,6 +78,8 @@ If true, prints additional info when sourcing
 Determines how much detail to print
 * spawn_debugger = [bool]     
 If true, will spawn the soar debugger
+* start_running = [bool]     
+If true, will run the agent after it is created + connected
 * write_to_stdout = [bool]     
 If true, will echo any soar output/printing via print_handler
 * enable_log = [bool]     
@@ -147,7 +149,9 @@ If no attribute is specified, all child Identifiers are returned
 Given an attribute, returns a list of strings from all child WME's matching `(<id> ^attribute <value>)`
 If no attribute is specified, all child WME values (non-identifiers) are returned
 
-
+`Identifier.GetAllChildWmes()`     
+Returns a list of (attr, val) tuples representing all wmes rooted at this identifier.
+val will either be an Identifier or a string, depending on its type """
 
 
 <a name="wminterface"></a>
@@ -210,6 +214,9 @@ Package containing several utility functions for reading/writing working memory 
 
 Given a printout of soar's working memory (p S1 -d 4), parses it into a dictionary of wmes, 
 where the keys are identifiers, and the values are lists of wme triples rooted at that id.
+
+You can wrap the result with a PrintoutIdentifier(wmes, root_id) which will provide an Identifier-like
+iterface for crawling over the graph structure. It provides all the methods in the IdentifierExtensions interface.
 
 
 #### `extract_wm_graph(root_id, max_depth)`

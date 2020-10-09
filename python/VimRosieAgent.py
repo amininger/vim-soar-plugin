@@ -13,6 +13,8 @@ class VimRosieAgent(RosieAgent):
                 print_handler = lambda message: writer.write(message, VimWriter.MAIN_PANE, clear=False, scroll=True),
                 spawn_debugger=False, write_to_stdout=True, **kwargs)
 
+        self.last_print_command = None
+
         if self.messages_file != None:
             with open(self.messages_file, 'r') as f:
                 lines = ( line.strip() for line in f.readlines() )
@@ -41,6 +43,30 @@ class VimRosieAgent(RosieAgent):
     def connect(self):
         super().connect()
         self.agent.RunSelf(1)
+
+    def _on_init_soar(self):
+        super()._on_init_soar()
+        self.last_print_command = None
+
+    def execute_command(self, cmd, print_res=False):
+        if cmd.startswith("p ") or cmd.startswith("print "):
+            self.last_print_command = cmd
+        return super().execute_command(cmd, print_res)
+
+    def repeat_last_print(self, depth_change=0, print_res=False):
+        """ Will redo the last print command, with the option to change the depth """
+        if self.last_print_command is None:
+            result = "No saved print command"
+        else:
+            args = self.last_print_command.split()
+            # Here we assume the previous command is either 'p <s2>' or 'p <s2> -d 3'
+            if len(args) < 3:
+                args.append('-d')
+            if len(args) < 4:
+                args.append(str(1))
+            args[3] = str(int(args[3])+depth_change)
+            result = self.execute_command(" ".join(args), print_res)
+        return result
 
     def start_buffering_output(self):
         self.buffered_output = []

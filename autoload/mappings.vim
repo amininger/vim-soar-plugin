@@ -129,4 +129,13 @@ nnoremap ;o6 :call PrintCurrentOperator(6)<CR>
 " print rosie world
 nnoremap ;prw :call PrintRosieWorld("S1")<CR>
 
+command! -nargs=1 PrintRosieWorld :call PrintRosieWorld(<f-args>)
+command! -nargs=1 PrintTaskOperator :call PrintTaskOperator(<f-args>)
 
+" do the last print command (a)gain, and change the depth
+" i.e. ;a2 will repeat the last print command but with the depth increased by 2
+nnoremap ;aa :Python agent.repeat_last_print(1, True)<CR>
+nnoremap ;a0 :Python agent.repeat_last_print(0, True)<CR>
+nnoremap ;a1 :Python agent.repeat_last_print(1, True)<CR>
+nnoremap ;a2 :Python agent.repeat_last_print(2, True)<CR>
+nnoremap ;a3 :Python agent.repeat_last_print(3, True)<CR>

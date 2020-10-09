@@ -197,6 +197,8 @@ U      | Run 10 decision cycles
 ;st | Prints out the current state (bottom of the stack)
 ;s# | Prints out the current state to # depth (;s2)
 ;o# | Prints out the current operator to # depth (;o2)
+;aa | Does the last print command (a)gain, but with the depth increased by 1
+;a# | Does the last print command (a)gain, but with the depth increased by #
 
 """ EDITING
 ;or | Open the soar file defining the current rule name in a new tab [cursor is on rule name]

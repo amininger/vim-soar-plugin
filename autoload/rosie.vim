@@ -54,9 +54,16 @@ endfunction
 
 Python << EOF
 def send_message(msg):
-	if len(msg.strip()) > 0:
+	msg = msg.strip()
+	if len(msg) == 0:
+		return
+	if msg[0] != '!':
 		writer.write("Instr: " + msg, VimWriter.SIDE_PANE_TOP, clear=False, scroll=True)
 		agent.connectors["language"].send_message(msg)
+	else:
+		commands = agent.get_connector("commands")
+		if commands is not None:
+			commands.handle_command(msg[1:])
 
 def insert_text(txt):
 	vim.command('execute "normal! i' + txt + '\<Esc>"')

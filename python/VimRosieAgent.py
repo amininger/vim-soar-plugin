@@ -2,7 +2,8 @@
 import sys
 import vim
 
-from rosie import ActionStackConnector, LanguageConnector, RosieAgent
+from rosie import ActionStackConnector, RosieAgent
+from rosie.language import LanguageConnector
 
 from VimWriter import VimWriter
 
@@ -35,6 +36,10 @@ class VimRosieAgent(RosieAgent):
             lambda message: writer.write(message, VimWriter.MAIN_PANE, clear=False, scroll=True))
         self.connectors["action_stack"].register_task_change_callback(
             lambda message: writer.write(message, VimWriter.SIDE_PANE_MID, clear=False, scroll=True, strip=False))
+
+        if "script" in self.connectors:
+            self.connectors["script"].register_script_callback(
+            lambda message: writer.write(message, VimWriter.SIDE_PANE_TOP, clear=False, scroll=True))
 
     def update_debugger_info(self):
         stack = self.agent.ExecuteCommandLine("p --stack", False)

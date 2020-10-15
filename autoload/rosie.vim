@@ -88,7 +88,7 @@ endfunction
 """""""""""""""""""""""""" MOBILE SIMULATOR """"""""""""""""""""""""'
 Python << EOF
 def setup_mobilesim_interface():
-	from mobilesim.rosie import LCMConnector, AgentCommandConnector, MobileSimPerceptionConnector, MobileSimActuationConnector
+	from mobilesim.rosie import LCMConnector, MobileSimCommandConnector, MobileSimPerceptionConnector, MobileSimActuationConnector
 
 	lcmConn = LCMConnector(agent)
 	agent.connectors["lcm"] = lcmConn
@@ -96,7 +96,7 @@ def setup_mobilesim_interface():
 	agent.connectors["perception"].print_handler = lambda message: writer.write(message)
 	agent.connectors["actuation"] = MobileSimActuationConnector(agent, lcmConn.lcm)
 	agent.connectors["actuation"].print_handler = lambda message: writer.write(message)
-	agent.connectors["agent_cmd"] = AgentCommandConnector(agent, lcmConn.lcm)
+	agent.connectors["commands"] = MobileSimCommandConnector(agent, lcmConn.lcm)
 EOF
 
 """""""""""""""""""""""""" AI2THOR SIMULATOR """"""""""""""""""""""""'

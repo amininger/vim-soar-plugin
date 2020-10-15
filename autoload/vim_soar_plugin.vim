@@ -78,7 +78,7 @@ function! vim_soar_plugin#OpenRosieDebugger(env, ...)
 	call SetupAgentMethods()
 	Python from VimRosieAgent import VimRosieAgent
 	Python simulator = None
-	Python agent = VimRosieAgent(writer, config_filename=vim.eval("config_file"))
+	Python agent = VimRosieAgent(writer, config_filename=vim.eval("config_file"), domain=vim.eval("a:env"))
 	call SetupRosieInterface(a:env)
 	Python agent.connect()
 endfunction

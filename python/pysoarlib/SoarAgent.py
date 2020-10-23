@@ -184,10 +184,12 @@ class SoarAgent():
         config_filename is a text file with lines of the form 'setting = value'"""
 
         # Add any settings in the config file (if it exists)
+        if self.config_filename is None:
+            return
+
         try:
             with open(self.config_filename, 'r') as fin:
                 config_args = [ line.split() for line in fin ]
-
             for args in config_args:
                 if len(args) == 3 and args[1] == '=':
                     key = args[0].replace("-", "_")
@@ -196,6 +198,7 @@ class SoarAgent():
                         self.settings[key] = args[2]
         except IOError:
             pass
+
 
     def _apply_settings(self):
         """ Set up the SoarAgent object by copying settings or filling in default values """

@@ -13,11 +13,17 @@ command! -nargs=1 -complete=file SourceSoarFile :call SourceSoarFile(<f-args>)
 " Will reject all operators with the given name (helpful to reset a substate) (debugger.vim)
 command! -nargs=1 RejectSoarOperator :call RejectSoarOperator(<f-args>)
 
+" Will source a rule that interrupts when the given operator is selected (debugger.vim)
+command! -nargs=1 AddSInterrupt :call AddSInterrupt(<f-args>)
+
 " Will source a rule that interrupts when the given operator is proposed (debugger.vim)
-command! -nargs=1 AddOpInterrupt :call AddOpInterrupt(<f-args>)
+command! -nargs=1 AddPInterrupt :call AddPInterrupt(<f-args>)
 
 " Will excise an interrupt rule for the given operator (debugger.vim)
-command! -nargs=1 RemoveOpInterrupt :call RemoveOpInterrupt(<f-args>)
+command! -nargs=1 RemoveInterrupt :call RemoveInterrupt(<f-args>)
+
+" Will excise an interrupt rule for the given operator (debugger.vim)
+command! -nargs=0 RemoveAllInterrupts :call RemoveAllInterrupts()
 
 " Will print out all chunks matching the given pattern
 command! -nargs=1 FilterChunks :call FilterChunks(<f-args>)

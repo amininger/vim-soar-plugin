@@ -46,6 +46,12 @@ def get_filtered_chunks(agent, pattern):
     return "".join(agent.execute_command("p " + chunk_name) for chunk_name in all_chunks
             if pattern in chunk_name)
 
+def excise_rules_matching_pattern(agent, pattern):
+    all_rules = agent.execute_command("p").split("\n")
+    for rule_name in all_rules:
+        if pattern in rule_name:
+            agent.execute_command("excise " + rule_name, print_res=True)
+
 def write_fired_rules(agent, filename):
     """ Writes out all rules that have fired so far into a single file """
     firing_counts = agent.execute_command("fc").split("\n")

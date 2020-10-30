@@ -144,14 +144,26 @@ function! RejectSoarOperator(op_name)
 endfunction
 
 " Will source a rule that interrupts when the given operator is proposed
-function! AddOpInterrupt(op_name)
-	let prod = "sp {DEBUG*INTERRUPT*".a:op_name." (state <s> ^operator (<o> ^name ".a:op_name.") +) --> (interrupt) }"
+function! AddPInterrupt(op_name)
+	let prod = "sp {DEBUGGER*INTERRUPT*".a:op_name." (state <s> ^operator (<o> ^name ".a:op_name.") +) --> (interrupt) }"
+	call ExecuteSoarCommand(prod)
+endfunction
+
+" Will source a rule that interrupts when the given operator is selected
+function! AddSInterrupt(op_name)
+	let prod = "sp {DEBUGGER*INTERRUPT*".a:op_name." (state <s> ^operator (<o> ^name ".a:op_name.")) --> (interrupt) }"
 	call ExecuteSoarCommand(prod)
 endfunction
 
 " Will excise an interrupt rule for the given operator
-function! RemoveOpInterrupt(op_name)
-	call ExecuteSoarCommand("excise DEBUG*INTERRUPT*".a:op_name)
+function! RemoveInterrupt(op_name)
+	call ExecuteSoarCommand("excise DEBUGGER*INTERRUPT*".a:op_name)
+endfunction
+
+" Will excise all interrupt rules created by the debugger
+function! RemoveAllInterrupts()
+	Python from DebuggerUtil import excise_rules_matching_pattern
+	Python excise_rules_matching_pattern(agent, "DEBUGGER*INTERRUPT*")
 endfunction
 
 """ Will print out any chunks matching the given pattern

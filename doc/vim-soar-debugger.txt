@@ -136,8 +136,10 @@ InsertSoarTemplate <template>   # Inserts a soar template of the given template 
 
 RejectSoarOperator <op-name> #  Will reject all operators with the given name for 1 dc
 
-AddOpInterrupt <op-name>    # Will source a rule that interrupts when the given operator is proposed
-RemoveOpInterrupt <op-name> # Will excise an interrupt rule for the given operator 
+AddPInterrupt <op-name>    # Will source a rule that interrupts when the given operator is proposed
+AddSInterrupt <op-name>    # Will source a rule that interrupts when the given operator is selected
+RemoveInterrupt <op-name> # Will excise an interrupt rule for the given operator 
+RemoveAllInterrupts       # Will excise all interrupt rules created by the debugger
 
 ==================================================
 DEBUGGER FUNCTIONS

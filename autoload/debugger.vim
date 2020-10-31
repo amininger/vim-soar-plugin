@@ -202,3 +202,23 @@ endfunction
 function! PrintRosieWorld()
 	Python writer.write(pretty_print_world(agent.execute_command("pworld -d 4")))
 endfunction
+
+""" Will delete all wait lines at the end of the debugger window
+"   (Lines where a wait operator is selected)
+function! RemoveWaits()
+	let last_line_num = line('$')
+	let cur_line = last_line_num
+
+	" Go backward from the end as long as each line is empty or a wait operator
+	while getline(cur_line) =~ 'O:.*(wait)' || getline(cur_line) =~ '^\s*$'
+		let cur_line = cur_line - 1
+	endwhile
+	let cur_line += 1
+	
+	if last_line_num >= cur_line
+		let del_cmd = ":".cur_line.",".last_line_num."d"
+		execute del_cmd
+	endif
+endfunction
+
+

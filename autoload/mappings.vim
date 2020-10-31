@@ -31,6 +31,9 @@ command! -nargs=1 FilterChunks :call FilterChunks(<f-args>)
 " Will print out all rules matching the given pattern
 command! -nargs=1 FilterRules :call FilterRules(<f-args>)
 
+" Will remove the last N lines in the current window that are all wait operators
+command! -nargs=0 RemoveWaits :call RemoveWaits()
+
 """"""""""""""""" Soar Plugin Key Mappings """""""""""""""""""
 
 " If you set the global variable enable_soar_plugin_mappings to 0

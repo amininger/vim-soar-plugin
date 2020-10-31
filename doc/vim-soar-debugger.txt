@@ -141,6 +141,8 @@ AddSInterrupt <op-name>    # Will source a rule that interrupts when the given o
 RemoveInterrupt <op-name> # Will excise an interrupt rule for the given operator 
 RemoveAllInterrupts       # Will excise all interrupt rules created by the debugger
 
+RemoveWaits               # Will delete lines from the end of the debugger until it hits a non-wait operator
+
 ==================================================
 DEBUGGER FUNCTIONS
 

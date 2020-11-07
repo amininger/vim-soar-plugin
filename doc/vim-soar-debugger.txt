@@ -161,12 +161,13 @@ CONFIG FILE OPTIONS
 agent-name = <string>     | The name of the agent
 agent-source = <filename> | The soar file to source
 smem-source = <filename>  | The soar file sourcing any smem code
+source-output = full|summary|none  | How much output to print when sourcing files
 
-verbose = <bool>          | If true, prints extra information when sourcing the agent (default=false)
 watch-level = <int>       | The watch level to print information at (default=1)
 spawn-debugger = <bool>   | If true, will spawn the soar debugger externally (default=false)
 write-to_stdout = <bool>  | If true, will print all output to std out (default=false) 
-write-log = <bool>        | If true, will write all soar output to a file called agent-log.txt
+enable-log = <bool>       | If true, will write all soar output to a file
+log-filename = <str>      | The name to give the log file (defaults to agent-log.txt)
 
 ==================================================
 DEFAULT VIM MAPPINGS

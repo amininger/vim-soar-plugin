@@ -2,7 +2,7 @@
 import sys
 import vim
 
-from rosie import ActionStackConnector, RosieAgent
+from rosie import ActionStackConnector, RosieAgent, CommandConnector
 from rosie.language import LanguageConnector
 
 from VimWriter import VimWriter
@@ -12,34 +12,34 @@ class VimRosieAgent(RosieAgent):
         self.vim_writer = writer
         RosieAgent.__init__(self, config_filename=config_filename, 
                 print_handler = lambda message: writer.write(message, VimWriter.MAIN_PANE, clear=False, scroll=True),
-                spawn_debugger=False, write_to_stdout=True, **kwargs)
+                spawn_debugger=False, write_to_stdout=True, custom_language_connector=True, custom_command_connector=True, **kwargs)
 
         self.last_print_command = None
 
-        if self.messages_file != None:
-            with open(self.messages_file, 'r') as f:
-                lines = ( line.strip() for line in f.readlines() )
-                # Filter empty lines and commented lines
-                lines = ( line for line in lines if len(line) > 0 and line[0] != '#' )
-                # Replace quotes with pipes
-                lines = ( line.replace('"', '|') for line in lines )
-                vim.command('let g:rosie_messages = ["' + '","'.join(lines) + '"]')
+        if len(self.messages) > 0:
+            lines = ( line.replace('"', '|') for line in self.messages )
+            vim.command('let g:rosie_messages = ["' + '","'.join(lines) + '"]')
 
-        self.connectors["language"] = LanguageConnector(self, 
-            lambda message: writer.write(message, VimWriter.MAIN_PANE, clear=False, scroll=True))
-        self.connectors["language"].register_message_callback(
+        self.add_connector("language", LanguageConnector(self, 
+            print_handler = lambda message: self.vim_writer.write(message, VimWriter.MAIN_PANE, clear=False, scroll=True)))
+        self.get_connector("language").register_message_callback(
             lambda message: writer.write(message, VimWriter.SIDE_PANE_TOP, clear=False, scroll=True))
-        self.connectors["language"].register_script_callback(
+        self.get_connector("language").register_script_callback(
             lambda message: writer.write(message, VimWriter.SIDE_PANE_TOP, clear=False, scroll=True))
 
-        self.connectors["action_stack"] = ActionStackConnector(self, print_handler = 
-            lambda message: writer.write(message, VimWriter.MAIN_PANE, clear=False, scroll=True))
-        self.connectors["action_stack"].register_task_change_callback(
+        self.add_connector("action_stack", ActionStackConnector(self, print_handler = 
+            lambda message: writer.write(message, VimWriter.MAIN_PANE, clear=False, scroll=True)))
+        self.get_connector("action_stack").register_task_change_callback(
             lambda message: writer.write(message, VimWriter.SIDE_PANE_MID, clear=False, scroll=True, strip=False))
 
-        if "script" in self.connectors:
-            self.connectors["script"].register_script_callback(
-            lambda message: writer.write(message, VimWriter.SIDE_PANE_TOP, clear=False, scroll=True))
+        if self.domain != "mobilesim":
+            self.add_connector("commands", CommandConnector(self, print_handler = 
+                lambda message: writer.write(message, VimWriter.MAIN_PANE, clear=False, scroll=True)))
+
+        if self.has_connector("script"):
+            self.get_connector("script").register_script_callback(
+            lambda message, i: writer.write(message, VimWriter.SIDE_PANE_TOP, clear=False, scroll=True))
+
 
     def update_debugger_info(self):
         stack = self.agent.ExecuteCommandLine("p --stack", False)

@@ -57,13 +57,9 @@ def send_message(msg):
 	msg = msg.strip()
 	if len(msg) == 0:
 		return
-	if msg.startswith("!CMD"):
-		commands = agent.get_connector("commands")
-		if commands is not None:
-			commands.handle_command(msg)
-	else:
+	if not msg.startswith("!CMD"):
 		writer.write("Instr: " + msg, VimWriter.SIDE_PANE_TOP, clear=False, scroll=True)
-		agent.connectors["language"].send_message(msg)
+	agent.send_message(msg)
 
 def insert_text(txt):
 	vim.command('execute "normal! i' + txt + '\<Esc>"')
@@ -104,6 +100,7 @@ def setup_mobilesim_interface():
 	agent.connectors["actuation"] = MobileSimActuationConnector(agent, lcmConn.lcm)
 	agent.connectors["actuation"].print_handler = lambda message: writer.write(message)
 	agent.connectors["commands"] = MobileSimCommandConnector(agent, lcmConn.lcm)
+	agent.connectors["commands"].print_handler = lambda message: writer.write(message)
 EOF
 
 """""""""""""""""""""""""" AI2THOR SIMULATOR """"""""""""""""""""""""'

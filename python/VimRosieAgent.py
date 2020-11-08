@@ -3,6 +3,7 @@ import sys
 import vim
 
 from rosie import ActionStackConnector, RosieAgent, CommandConnector
+from rosie.events import *
 from rosie.language import LanguageConnector
 
 from VimWriter import VimWriter
@@ -22,23 +23,21 @@ class VimRosieAgent(RosieAgent):
 
         self.add_connector("language", LanguageConnector(self, 
             print_handler = lambda message: self.vim_writer.write(message, VimWriter.MAIN_PANE, clear=False, scroll=True)))
-        self.get_connector("language").register_message_callback(
-            lambda message: writer.write(message, VimWriter.SIDE_PANE_TOP, clear=False, scroll=True))
-        self.get_connector("language").register_script_callback(
-            lambda message: writer.write(message, VimWriter.SIDE_PANE_TOP, clear=False, scroll=True))
+        self.add_event_handler(AgentMessageSent, lambda e: 
+            writer.write(e.message, VimWriter.SIDE_PANE_TOP, clear=False, scroll=True))
+        self.add_event_handler(InstructorMessageSent, lambda e: 
+            writer.write(e.message, VimWriter.SIDE_PANE_TOP, clear=False, scroll=True))
 
         self.add_connector("action_stack", ActionStackConnector(self, print_handler = 
             lambda message: writer.write(message, VimWriter.MAIN_PANE, clear=False, scroll=True)))
-        self.get_connector("action_stack").register_task_change_callback(
-            lambda message: writer.write(message, VimWriter.SIDE_PANE_MID, clear=False, scroll=True, strip=False))
+        self.add_event_handler(TaskStarted, lambda e: 
+            writer.write("  "*(e.depth-1) + "> " + e.task_desc, VimWriter.SIDE_PANE_MID, clear=False, scroll=True, strip=False))
+        self.add_event_handler(TaskCompleted, lambda e: 
+            writer.write("  "*(e.depth-1) + "< " + e.task_desc, VimWriter.SIDE_PANE_MID, clear=False, scroll=True, strip=False))
 
         if self.domain != "mobilesim":
             self.add_connector("commands", CommandConnector(self, print_handler = 
                 lambda message: writer.write(message, VimWriter.MAIN_PANE, clear=False, scroll=True)))
-
-        if self.has_connector("script"):
-            self.get_connector("script").register_script_callback(
-            lambda message, i: writer.write(message, VimWriter.SIDE_PANE_TOP, clear=False, scroll=True))
 
 
     def update_debugger_info(self):

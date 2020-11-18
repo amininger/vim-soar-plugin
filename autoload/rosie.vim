@@ -32,6 +32,24 @@ writer.write(task_to_str(task_id))
 EOF
 endfunction
 
+""" Will print the task concept network for the task with the given handle
+function! PrintTCN(task_handle)
+Python << EOF
+
+from pysoarlib.util import PrintoutIdentifier
+from rosie.tools import tcn_to_str
+
+task_h = vim.eval("a:task_handle")
+query_res = agent.execute_command("smem -q {(<t> ^handle " + task_h + ")}")
+if query_res.startswith("(@"):
+	tcn_lti = query_res.split()[0].replace("(", "")
+	tcn_id = PrintoutIdentifier.create(agent, tcn_lti, 20)
+	writer.write(tcn_to_str(tcn_id))
+else:
+	writer.write("Query for task " + task_h + " failed")
+	writer.write(query_res)
+EOF
+endfunction
 
 """""""""""""""""""""""""" SENDING MESSAGES """"""""""""""""""""""""'
 

@@ -138,8 +138,12 @@ nnoremap ;o6 :call PrintCurrentOperator(6)<CR>
 " print rosie world
 nnoremap ;prw :call PrintRosieWorld("S1")<CR>
 
+" Takes a state identifier
 command! -nargs=1 PrintRosieWorld :call PrintRosieWorld(<f-args>)
+" Takes an operator identifier
 command! -nargs=1 PrintTaskOperator :call PrintTaskOperator(<f-args>)
+" Takes a task handle
+command! -nargs=1 PrintTCN :call PrintTCN(<f-args>)
 
 " do the last print command (a)gain, and change the depth
 " i.e. ;a2 will repeat the last print command but with the depth increased by 2

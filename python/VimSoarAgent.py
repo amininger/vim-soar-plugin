@@ -12,6 +12,7 @@ class VimSoarAgent(SoarAgent):
                 print_handler = lambda message: writer.write(message, VimWriter.MAIN_PANE, clear=False, scroll=True),
                 spawn_debugger=False, write_to_stdout=True, **kwargs)
 
+        self.last_soar_command = None
         self.last_print_command = None
 
     def update_debugger_info(self):
@@ -24,11 +25,13 @@ class VimSoarAgent(SoarAgent):
 
     def _on_init_soar(self):
         super()._on_init_soar()
+        self.last_soar_command = None
         self.last_print_command = None
 
     def execute_command(self, cmd, print_res=False):
         if cmd.startswith("p ") or cmd.startswith("print "):
             self.last_print_command = cmd
+        self.last_soar_command = cmd
         return super().execute_command(cmd, print_res)
 
     def start_buffering_output(self):

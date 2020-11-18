@@ -203,6 +203,14 @@ function! PrintRosieWorld()
 	Python writer.write(pretty_print_world(agent.execute_command("pworld -d 4")))
 endfunction
 
+""" Will print out the top-state rosie world in a pretty format
+function! PrintOperatorPrefs()
+Python << EOF
+if agent.last_soar_command is not None and agent.last_soar_command.startswith("pref"):
+	agent.execute_command(agent.last_soar_command + " operator --names", print_res=True)
+EOF
+endfunction
+
 """ Will delete all wait lines at the end of the debugger window
 "   (Lines where a wait operator is selected)
 function! RemoveWaits()

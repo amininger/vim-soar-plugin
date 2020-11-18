@@ -16,7 +16,7 @@ class VimRosieAgent(RosieAgent):
                 spawn_debugger=False, write_to_stdout=True, custom_language_connector=True, **kwargs)
 
         self.last_print_command = None
-
+        self.last_soar_command = None
 
         if len(self.messages) > 0:
             lines = ( line.replace('"', '|') for line in self.messages )
@@ -51,10 +51,12 @@ class VimRosieAgent(RosieAgent):
     def _on_init_soar(self):
         super()._on_init_soar()
         self.last_print_command = None
+        self.last_soar_command = None
 
     def execute_command(self, cmd, print_res=False):
         if cmd.startswith("p ") or cmd.startswith("print "):
             self.last_print_command = cmd
+        self.last_soar_command = cmd
         return super().execute_command(cmd, print_res)
 
     def repeat_last_print(self, depth_change=0, print_res=False):

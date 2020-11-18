@@ -152,3 +152,7 @@ nnoremap ;a0 :Python agent.repeat_last_print(0, True)<CR>
 nnoremap ;a1 :Python agent.repeat_last_print(1, True)<CR>
 nnoremap ;a2 :Python agent.repeat_last_print(2, True)<CR>
 nnoremap ;a3 :Python agent.repeat_last_print(3, True)<CR>
+
+" assuming the last command was a state preference command ('pref S34')
+" will repeat the command but add 'operator --names'
+nnoremap ;na :call PrintOperatorPrefs()<CR>

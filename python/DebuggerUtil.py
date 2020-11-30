@@ -34,6 +34,13 @@ def get_current_operator(agent):
             return words[2]
     return ""
 
+def print_chunks(agent, num=-1):
+    """ Prints a list of the [num] most recently learned chunks (or all if num=-1)"""
+    chunks = agent.execute_command("pc").split("\n")
+    if num > 0:
+        chunks = chunks[0:num]
+    return "\n".join(reversed(chunks))
+
 def get_filtered_rules(agent, pattern):
     """ Returns a printout of all rules that contain the given pattern """
     all_rules = agent.execute_command("p").split("\n")

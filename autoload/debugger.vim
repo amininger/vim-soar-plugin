@@ -166,6 +166,17 @@ function! RemoveAllInterrupts()
 	Python excise_rules_matching_pattern(agent, "DEBUGGER*INTERRUPT*")
 endfunction
 
+""" Will print the learned chunks in reverse order (last is most recent),
+" Optional Parameter n: the # to print
+function! PrintChunks(...)
+	let num_chunks = -1
+	if a:0 > 0
+		let num_chunks = a:1
+	endif
+	Python from DebuggerUtil import print_chunks, insert_text_at_cursor
+	Python insert_text_at_cursor(print_chunks(agent, int(vim.eval('num_chunks'))))
+endfunction
+
 """ Will print out any chunks matching the given pattern
 function! FilterChunks(pattern)
 	Python from DebuggerUtil import get_filtered_chunks, insert_text_at_cursor

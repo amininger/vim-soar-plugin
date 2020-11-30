@@ -25,6 +25,9 @@ command! -nargs=1 RemoveInterrupt :call RemoveInterrupt(<f-args>)
 " Will excise an interrupt rule for the given operator (debugger.vim)
 command! -nargs=0 RemoveAllInterrupts :call RemoveAllInterrupts()
 
+" Will print the N most recently learned chunks (or all)
+command! -nargs=? PrintChunks :call PrintChunks(<f-args>)
+
 " Will print out all chunks matching the given pattern
 command! -nargs=1 FilterChunks :call FilterChunks(<f-args>)
 
@@ -108,6 +111,9 @@ nnoremap ;mr :call ExecuteSoarCommand("matches ".GetSoarWord())<CR>
 nnoremap ;er :call ExecuteSoarCommand("excise ".GetSoarWord())<CR>
 " firing count of rule name
 nnoremap ;fcr :call ExecuteSoarCommand("fc ".GetSoarWord())<CR>
+
+" Prints the names of the last 5 chunks learned
+nnoremap ;pc :call PrintChunks(5)<CR>
 
 " print wmes
 nnoremap ;p1 :call ExecuteSoarCommand("p ".GetSoarWord())<CR>

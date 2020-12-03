@@ -39,6 +39,8 @@ class VimRosieAgent(RosieAgent):
         if self.has_connector("commands"):
             self.get_connector("commands").print_handler = print_main_page
 
+        self.get_connector('time').print_handler = print_main_page
+
 
     def update_debugger_info(self):
         stack = self.agent.ExecuteCommandLine("p --stack", False)

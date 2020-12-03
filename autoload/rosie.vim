@@ -43,7 +43,7 @@ task_h = vim.eval("a:task_handle")
 query_res = agent.execute_command("smem -q {(<t> ^handle " + task_h + ")}")
 if query_res.startswith("(@"):
 	tcn_lti = query_res.split()[0].replace("(", "")
-	tcn_id = PrintoutIdentifier.create(agent, tcn_lti, 20)
+	tcn_id = PrintoutIdentifier.create(agent, tcn_lti, 50)
 	writer.write(tcn_to_str(tcn_id))
 else:
 	writer.write("Query for task " + task_h + " failed")

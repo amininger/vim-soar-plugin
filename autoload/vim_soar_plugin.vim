@@ -44,7 +44,7 @@ function! vim_soar_plugin#OpenSoarDebugger(...)
 	call SetupDebuggerPanes()
 	call SetupAgentMethods()
 	Python simulator = None
-	Python agent = VimSoarAgent(writer, config_filename=vim.eval("config_file"))
+	Python agent = VimSoarClient(writer, config_filename=vim.eval("config_file"))
 	Python agent.connect()
 endfunction
 
@@ -53,7 +53,7 @@ function! vim_soar_plugin#OpenRemoteDebugger(...)
 	call SetupDebuggerPanes()
 	call SetupAgentMethods()
 	Python simulator = None
-	Python agent = VimSoarAgent(writer, remote_connection=True)
+	Python agent = VimSoarClient(writer, remote_connection=True)
 	Python agent.connect()
 endfunction
 
@@ -76,9 +76,9 @@ function! vim_soar_plugin#OpenRosieDebugger(env, ...)
 	endif
 	call SetupDebuggerPanes()
 	call SetupAgentMethods()
-	Python from VimRosieAgent import VimRosieAgent
+	Python from VimRosieClient import VimRosieClient
 	Python simulator = None
-	Python agent = VimRosieAgent(writer, config_filename=vim.eval("config_file"), domain=vim.eval("a:env"))
+	Python agent = VimRosieClient(writer, config_filename=vim.eval("config_file"), domain=vim.eval("a:env"))
 	call SetupRosieInterface(a:env)
 	Python agent.connect()
 endfunction

@@ -57,7 +57,7 @@ import sys
 import os
 import vim
 
-from VimSoarAgent import VimSoarAgent
+from VimSoarClient import VimSoarClient
 from VimWriter import VimWriter
 
 writer = VimWriter()
@@ -76,9 +76,9 @@ def run_silent(num_dcs):
 	global agent
 	if agent is not None:
 		num_dcs = int(num_dcs)
-		agent.start_buffering_output()
+		agent.vim_connector.start_buffering_output()
 		agent.agent.RunSelf(num_dcs)
-		agent.stop_buffering_output()
+		agent.vim_connector.stop_buffering_output()
 		agent.update_debugger_info()
 
 def run_slow(num_dcs):

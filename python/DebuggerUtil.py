@@ -8,14 +8,14 @@ def insert_text_at_cursor(text, scroll=True):
     if scroll:
         win.cursor = (win.cursor[0] + len(lines), 0)
 
-def print_id(agent, soar_id, depth=1):
+def print_id(client, soar_id, depth=1):
     """ Will return the printout of the given id to the given depth """
-    return agent.execute_command("p " + soar_id + " -d " + str(depth))
+    return client.execute_command("p " + soar_id + " -d " + str(depth))
 
-def get_current_substate(agent):
-    """ Returns the identifier symbol of the deepest state for the given SoarAgent
+def get_current_substate(client):
+    """ Returns the identifier symbol of the deepest state for the given SoarClient
         (Prints the stack and gets the bottom state)"""
-    stack = agent.execute_command("p --stack").split("\n")
+    stack = client.execute_command("p --stack").split("\n")
     # Find the last line in the stack printout that matches '  :      ==>S: S124 (impasse-type)'
     for line in reversed(stack):
         words = line.split()
@@ -23,10 +23,10 @@ def get_current_substate(agent):
             return words[2]
     return "S1"
 
-def get_current_operator(agent):
-    """ Returns the symbol of the currently selected operator on the deepest state for the given SoarAgent
+def get_current_operator(client):
+    """ Returns the symbol of the currently selected operator on the deepest state for the given SoarClient
         (Prints the stack and gets the bottom operator) """
-    stack = agent.execute_command("p --stack").split("\n")
+    stack = client.execute_command("p --stack").split("\n")
     # Find the last line in the stack printout that matches '  :        O: O452 (operator-name)'
     for line in reversed(stack):
         words = line.split()
@@ -34,34 +34,34 @@ def get_current_operator(agent):
             return words[2]
     return ""
 
-def print_chunks(agent, num=-1):
+def print_chunks(client, num=-1):
     """ Prints a list of the [num] most recently learned chunks (or all if num=-1)"""
-    chunks = agent.execute_command("pc").split("\n")
+    chunks = client.execute_command("pc").split("\n")
     if num > 0:
         chunks = chunks[0:num]
     return "\n".join(reversed(chunks))
 
-def get_filtered_rules(agent, pattern):
+def get_filtered_rules(client, pattern):
     """ Returns a printout of all rules that contain the given pattern """
-    all_rules = agent.execute_command("p").split("\n")
-    return "".join(agent.execute_command("p " + rule_name) for rule_name in all_rules 
+    all_rules = client.execute_command("p").split("\n")
+    return "".join(client.execute_command("p " + rule_name) for rule_name in all_rules 
             if pattern in rule_name)
 
-def get_filtered_chunks(agent, pattern):
+def get_filtered_chunks(client, pattern):
     """ Returns a printout of all chunks that match the given pattern """
-    all_chunks = agent.execute_command("pc").split("\n")
-    return "".join(agent.execute_command("p " + chunk_name) for chunk_name in all_chunks
+    all_chunks = client.execute_command("pc").split("\n")
+    return "".join(client.execute_command("p " + chunk_name) for chunk_name in all_chunks
             if pattern in chunk_name)
 
-def excise_rules_matching_pattern(agent, pattern):
-    all_rules = agent.execute_command("p").split("\n")
+def excise_rules_matching_pattern(client, pattern):
+    all_rules = client.execute_command("p").split("\n")
     for rule_name in all_rules:
         if pattern in rule_name:
-            agent.execute_command("excise " + rule_name, print_res=True)
+            client.execute_command("excise " + rule_name, print_res=True)
 
-def write_fired_rules(agent, filename):
+def write_fired_rules(client, filename):
     """ Writes out all rules that have fired so far into a single file """
-    firing_counts = agent.execute_command("fc").split("\n")
+    firing_counts = client.execute_command("fc").split("\n")
     with open(filename, 'w') as f:
         for line in firing_counts:
             args = line.split()
@@ -72,4 +72,4 @@ def write_fired_rules(agent, filename):
             if count == 0:
                 continue
             rule_name = args[1]
-            f.write(agent.execute_command("p " + rule_name))
+            f.write(client.execute_command("p " + rule_name))
